@@ -32,7 +32,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.Hands
             {
                 m_CurveInteractionDataProvider = provider;
                 m_HasCurveDataProvider = true;
-            }
+            }     
         }
 
         /// <summary>
