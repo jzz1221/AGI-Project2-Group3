@@ -11,6 +11,8 @@ public class HandGestureRecognizer : MonoBehaviour
 
     // Line Renderer for drawing
     public LineRenderer lineRenderer;
+    //public bool isGestureRecognized = false;
+    public bool PaintingMode = false;
 
     // Gesture detection variables
     private bool isDrawing = false;
@@ -39,19 +41,22 @@ public class HandGestureRecognizer : MonoBehaviour
     {
         if (ovrHand.IsTracked)
         {
-            // Check if the gesture is recognized
-            if (IsGestureRecognized())
-            {
-                Debug.Log("Gesture recognized!");
-                StartDrawing();
-                Draw();
-            }
-            else
-            {
-                StopDrawing();
+            if (PaintingMode) {
+                // Check if the gesture is recognized
+                if (IsGestureRecognized())
+                {
+                    Debug.Log("Gesture recognized!");
+                    StartDrawing();
+                    Draw();
+                }
+                else
+                {
+                    StopDrawing();
+                }
             }
         }
     }
+
     IEnumerator InitializeBones()
     {
         while (!ovrSkeleton.IsInitialized)
@@ -79,18 +84,20 @@ public class HandGestureRecognizer : MonoBehaviour
 
 
     // Method to check if the gesture is recognized
-    private bool IsGestureRecognized()
+    public bool IsGestureRecognized()
     {
         // Use GetFingerPinchStrength to estimate finger curl
         float indexFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
+        Debug.Log("-----------indexFingerCurl:" + indexFingerCurl + "----------");
+
         float middleFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
         float ringFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Ring);
         float pinkyFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Pinky);
         float thumbCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
 
         // Define thresholds
-        float extendedThreshold = 0.3f; // Lower values mean more extended
-        float curledThreshold = 0.7f;   // Higher values mean more curled
+        float extendedThreshold = 0.2f; // Lower values mean more extended
+        float curledThreshold = 0.6f;   // Higher values mean more curled
 
         // Check if index and middle fingers are extended
         bool isIndexFingerExtended = indexFingerCurl < extendedThreshold;
@@ -99,10 +106,12 @@ public class HandGestureRecognizer : MonoBehaviour
         // Check if other fingers are curled
         bool isRingFingerCurled = ringFingerCurl > curledThreshold;
         bool isPinkyFingerCurled = pinkyFingerCurl > curledThreshold;
-        bool isThumbCurled = thumbCurl > curledThreshold;
+        //bool isThumbCurled = thumbCurl > curledThreshold;
 
         // Return true if the gesture matches
-        return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled && isThumbCurled;
+        //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled && isThumbCurled;
+        //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled;
+        return isIndexFingerExtended && isMiddleFingerExtended;
     }
 
     private void StartDrawing()
@@ -132,7 +141,7 @@ public class HandGestureRecognizer : MonoBehaviour
         lineRenderer.SetPositions(drawingPoints.ToArray());
     }
 
-    private Vector3 GetIndexFingerTipPosition()
+    public Vector3 GetIndexFingerTipPosition()
     {
         if (bones == null || bones.Count == 0)
         {
