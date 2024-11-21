@@ -33,6 +33,7 @@ public class HandGestureRecognizerWithPainting : MonoBehaviour
         }
 
         StartCoroutine(InitializeBones());
+        AddFingerTipCollider();
     }
 
 
@@ -161,6 +162,38 @@ public class HandGestureRecognizerWithPainting : MonoBehaviour
         Debug.LogError("Index fingertip bone not found.");
         return Vector3.zero;
     }
+    void AddFingerTipCollider()
+    {
+        foreach (var bone in bones)
+        {
+            if (bone.Id == OVRSkeleton.BoneId.Hand_IndexTip)
+            {
+                var fingerTip = bone.Transform.gameObject;
 
+                // Add SphereCollider
+                var collider = fingerTip.GetComponent<SphereCollider>();
+                if (collider == null)
+                {
+                    collider = fingerTip.gameObject.AddComponent<SphereCollider>();
+                    collider.isTrigger = true;
+                    collider.radius = 0.01f;
+                }
+
+                //// Add Rigidbody
+                //var rigidbody = fingerTip.GetComponent<Rigidbody>();
+                //if (rigidbody == null)
+                //{
+                //    rigidbody = fingerTip.gameObject.AddComponent<Rigidbody>();
+                //    rigidbody.isKinematic = true;
+                //    rigidbody.useGravity = false;
+                //}
+
+                // Set tip
+                fingerTip.tag = "FingerTip";
+
+                break;
+            }
+        }
+    }
 
 }
