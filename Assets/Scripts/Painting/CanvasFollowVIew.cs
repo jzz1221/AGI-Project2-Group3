@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
+using System; // 引入 System 命名空间以使用 Action
 
 public class CanvasFollowView : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class CanvasFollowView : MonoBehaviour
     private bool canvasLocked = false; // 添加画板是否锁定的状态
 
     private Coroutine unlockCanvasCoroutine; // 用于存储解锁画板的协程
+
+    // 定义一个事件，当绘画结束时触发，并传递绘制的点数组
+    public event Action<List<Vector3>> OnDrawingFinished;
 
     void Update()
     {
@@ -77,14 +81,27 @@ public class CanvasFollowView : MonoBehaviour
         if (isDrawing)
         {
             isDrawing = false;
-            // 移除以下行以避免立即解锁画板
-            // canvasLocked = false;
             currentLine = null;
+
+            // 仅当实际绘制了点时，才进行后续处理
+            if (drawingPoints.Count > 0)
+            {
+                // 触发 OnDrawingFinished 事件，传递当前绘制的点
+                OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+            }
+
+            drawingPoints.Clear();
         }
     }
 
     private void Draw()
     {
+        // 如果还没有开始绘制，初始化绘制
+        if (!isDrawing)
+        {
+            StartDrawing();
+        }
+
         Vector3 fingerTipPosition = gestureRecognizer.GetIndexFingerTipPosition();
         Debug.Log("-----------" + fingerTipPosition + "----------");
         drawingPoints.Add(fingerTipPosition);
@@ -101,7 +118,7 @@ public class CanvasFollowView : MonoBehaviour
             unlockCanvasCoroutine = null;
         }
         PaintingMode = true;
-        StartDrawing();
+        // 不再在这里调用 StartDrawing()
     }
 
     private void OnTriggerExit(Collider other)

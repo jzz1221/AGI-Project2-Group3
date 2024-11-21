@@ -1279,7 +1279,7 @@ GameObject:
   - component: {fileID: 525759471}
   - component: {fileID: 525759474}
   m_Layer: 3
-  m_Name: MenuPanel (1)
+  m_Name: PaintingPlane
   m_TagString: Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1295,10 +1295,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.077874295, y: 0.12149359, z: -0.009561756, w: 0.9894865}
   m_LocalPosition: {x: 0.08, y: -0.1, z: 0.42}
-  m_LocalScale: {x: 0.24000001, y: 0.45000002, z: 1}
+  m_LocalScale: {x: 0.24000002, y: 0.45000002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1825247042}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 9, y: 14, z: 0}
 --- !u!65 &525759471
 BoxCollider:
@@ -1387,8 +1387,8 @@ MonoBehaviour:
   gestureRecognizer: {fileID: 652594568}
   distance: 0.42
   offset: {x: 0, y: 0, z: 0}
-  lineMaterial: {fileID: 2100000, guid: 53c16fb5d5c516b40a1f6a8fc34132f3, type: 2}
-  lineWidth: 0.03
+  lineMaterial: {fileID: 2100000, guid: f5ccd52dc494e054fbe7d7161dcabe25, type: 2}
+  lineWidth: 0.01
   minDistanceThreshold: 0.001
   PaintingMode: 0
 --- !u!1 &595815176 stripped
@@ -5992,10 +5992,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 408912004}
-    - targetCorrespondingSourceObject: {fileID: 400002, guid: 126d619cf4daa52469682f85c1378b4a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 525759468}
     - targetCorrespondingSourceObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a,
         type: 3}
       insertIndex: -1
@@ -20741,3 +20737,4 @@ SceneRoots:
   - {fileID: 867603377}
   - {fileID: 652594567}
   - {fileID: 1304190914}
+  - {fileID: 525759468}
