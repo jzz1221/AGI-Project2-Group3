@@ -6,18 +6,26 @@ using System.Collections;
 
 public class HandGestureRecognizer : MonoBehaviour
 {
+    // OVRHand
     public OVRHand ovrHand;
+
     private OVRSkeleton ovrSkeleton;
-
-    // Line Renderer for drawing
-    public LineRenderer lineRenderer;
-    //public bool isGestureRecognized = false;
-    public bool PaintingMode = false;
-
-    // Gesture detection variables
-    private bool isDrawing = false;
-    private List<Vector3> drawingPoints = new List<Vector3>();
     private List<OVRBone> bones = new List<OVRBone>();
+    //private SphereCollider indexFingerCollider;
+    // Line Renderer for drawing
+    //public LineRenderer lineRenderer;
+    //public bool PaintingMode = false;
+
+
+    // Painting Feature variables
+    //public GameObject drawingBoard;
+    //public Material lineMaterial;
+    //public float lineWidth = 0.01f;
+    //private bool isDrawing = false;
+    //private bool isFingerTouchingBoard = false;
+    //private Vector3 contactPoint;
+    //private List<Vector3> drawingPoints = new List<Vector3>();
+
     void Start()
     {
         // Assign ovrSkeleton before starting the coroutine
@@ -33,29 +41,84 @@ public class HandGestureRecognizer : MonoBehaviour
         }
 
         StartCoroutine(InitializeBones());
+        AddFingerTipCollider();
     }
 
 
 
     void Update()
     {
-        if (ovrHand.IsTracked)
-        {
-            if (PaintingMode) {
-                // Check if the gesture is recognized
-                if (IsGestureRecognized())
-                {
-                    Debug.Log("Gesture recognized!");
-                    StartDrawing();
-                    Draw();
-                }
-                else
-                {
-                    StopDrawing();
-                }
-            }
-        }
+        //IsGestureRecognized();
+        //if (ovrHand.IsTracked)
+        //{
+        //    if (IsGestureRecognized() && isFingerTouchingBoard)
+        //    {
+        //        Debug.Log("into this");
+
+        //        StartDrawing();
+        //        Debug.Log("Start Drawomg");
+        //        DrawOnBoard();
+        //    }
+        //    else
+        //    {
+        //        StopDrawing();
+        //    }
+        //}
+        //if (ovrHand.IsTracked)
+        //{
+        //    if (PaintingMode) {
+        //        // Check if the gesture is recognized
+        //        if (IsGestureRecognized())
+        //        {
+        //            Debug.Log("Gesture recognized!");
+        //            StartDrawing();
+        //            Draw();
+        //        }
+        //        else
+        //        {
+        //            StopDrawing();
+        //        }
+        //    }
+        //}
     }
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Canvas"))
+    //    {
+    //        isFingerTouchingBoard = true;
+    //        Debug.LogError("is Finger Touching Board");
+
+    //    }
+    //}
+
+    //void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Canvas"))
+    //    {
+    //        isFingerTouchingBoard = false;
+    //    }
+    //}
+
+    //void OnTriggerStay(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Canvas"))
+    //    {
+    //        isFingerTouchingBoard = true;
+    //        contactPoint = GetContactPoint(other);
+    //    }
+    //}
+    //Vector3 GetContactPoint(Collider boardCollider)
+    //{
+    //    RaycastHit hit;
+    //    Vector3 fingerTipPosition = GetIndexFingerTipPosition();
+    //    Vector3 direction = -boardCollider.transform.forward;
+
+    //    if (Physics.Raycast(fingerTipPosition, direction, out hit))
+    //    {
+    //        return hit.point;
+    //    }
+    //    return fingerTipPosition;
+    //}
 
     IEnumerator InitializeBones()
     {
@@ -88,58 +151,34 @@ public class HandGestureRecognizer : MonoBehaviour
     {
         // Use GetFingerPinchStrength to estimate finger curl
         float indexFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
-        Debug.Log("-----------indexFingerCurl:" + indexFingerCurl + "----------");
-
         float middleFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
         float ringFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Ring);
         float pinkyFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Pinky);
         float thumbCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
+        //Debug.Log($"Finger Curl Values -> Index: {indexFingerCurl}, Middle: {middleFingerCurl}, Ring: {ringFingerCurl}, Pinky: {pinkyFingerCurl}, Thumb: {thumbCurl}");
 
         // Define thresholds
         float extendedThreshold = 0.2f; // Lower values mean more extended
-        float curledThreshold = 0.6f;   // Higher values mean more curled
+        float curledThreshold = 0.3f;   // Higher values mean more curled
 
-        // Check if index and middle fingers are extended
         bool isIndexFingerExtended = indexFingerCurl < extendedThreshold;
         bool isMiddleFingerExtended = middleFingerCurl < extendedThreshold;
 
-        // Check if other fingers are curled
         bool isRingFingerCurled = ringFingerCurl > curledThreshold;
         bool isPinkyFingerCurled = pinkyFingerCurl > curledThreshold;
-        //bool isThumbCurled = thumbCurl > curledThreshold;
+        bool isThumbCurled = thumbCurl > curledThreshold;
 
-        // Return true if the gesture matches
+
+        if (isIndexFingerExtended && isMiddleFingerExtended)
+        {
+            //Debug.Log("Gesture Recognized");
+        }
         //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled && isThumbCurled;
         //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled;
         return isIndexFingerExtended && isMiddleFingerExtended;
     }
 
-    private void StartDrawing()
-    {
-        if (!isDrawing)
-        {
-            isDrawing = true;
-            drawingPoints.Clear();
-            lineRenderer.positionCount = 0;
-        }
-    }
-
-    private void StopDrawing()
-    {
-        if (isDrawing)
-        {
-            isDrawing = false;
-        }
-    }
-
-    private void Draw()
-    {
-        Vector3 fingerTipPosition = GetIndexFingerTipPosition();
-        //Debug.Log("-----------"+fingerTipPosition+"----------");
-        drawingPoints.Add(fingerTipPosition);
-        lineRenderer.positionCount = drawingPoints.Count;
-        lineRenderer.SetPositions(drawingPoints.ToArray());
-    }
+    
 
     public Vector3 GetIndexFingerTipPosition()
     {
@@ -162,5 +201,38 @@ public class HandGestureRecognizer : MonoBehaviour
         return Vector3.zero;
     }
 
+    void AddFingerTipCollider()
+    {
+        foreach (var bone in bones)
+        {
+            if (bone.Id == OVRSkeleton.BoneId.Hand_IndexTip)
+            {
+                var fingerTip = bone.Transform.gameObject;
+
+                // Add SphereCollider
+                var collider = fingerTip.GetComponent<SphereCollider>();
+                if (collider == null)
+                {
+                    collider = fingerTip.gameObject.AddComponent<SphereCollider>();
+                    collider.isTrigger = true;
+                    collider.radius = 0.01f;
+                }
+
+                //// Add Rigidbody
+                //var rigidbody = fingerTip.GetComponent<Rigidbody>();
+                //if (rigidbody == null)
+                //{
+                //    rigidbody = fingerTip.gameObject.AddComponent<Rigidbody>();
+                //    rigidbody.isKinematic = true;
+                //    rigidbody.useGravity = false;
+                //}
+
+                // Set tip
+                fingerTip.tag = "FingerTip";
+
+                break;
+            }
+        }
+    }
 
 }
