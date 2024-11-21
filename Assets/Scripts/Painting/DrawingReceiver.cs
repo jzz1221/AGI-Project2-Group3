@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class DrawingReceiver : MonoBehaviour
 {
-    public CanvasFollowView canvasFollowView; // 需要在 Inspector 中手动分配
+    public CanvasFollowView canvasFollowView; // Must be assigned manually in the Inspector
 
     void Start()
     {
         if (canvasFollowView != null)
         {
-            // 订阅 OnDrawingFinished 事件
+            // Subscribe to the OnDrawingFinished event
             canvasFollowView.OnDrawingFinished += HandleDrawingFinished;
         }
         else
@@ -23,24 +23,24 @@ public class DrawingReceiver : MonoBehaviour
     {
         if (canvasFollowView != null)
         {
-            // 取消订阅事件，避免潜在的内存泄漏
+            // Unsubscribe from the event to prevent potential memory leaks
             canvasFollowView.OnDrawingFinished -= HandleDrawingFinished;
         }
     }
 
-    // 事件处理方法，当绘画结束时调用
+    // Event handler method called when drawing is finished
     private void HandleDrawingFinished(List<Vector3> drawingPoints)
     {
         Debug.Log("Drawing finished with " + drawingPoints.Count + " points.");
 
-        // 在这里处理绘制的点数组，例如生成图片或其他操作
-        // 例如：GenerateImageFromPoints(drawingPoints);
+        // Process the array of drawing points here, e.g., generate an image or perform other actions
+        // Example: GenerateImageFromPoints(drawingPoints);
     }
 
-    // 示例方法：根据绘制点生成图片（需要根据具体需求实现）
+    // Example method: Generate an image from drawing points (to be implemented as needed)
     private void GenerateImageFromPoints(List<Vector3> points)
     {
-        // 实现将 3D 点转换为 2D 图片的逻辑
-        // 这部分的实现取决于您的具体需求和方法
+        // Implement the logic to convert 3D points into a 2D image
+        // This implementation depends on your specific requirements and approach
     }
 }
