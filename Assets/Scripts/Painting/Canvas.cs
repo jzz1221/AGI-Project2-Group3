@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Canvas: MonoBehaviour
+public class Canvas : MonoBehaviour
 {
     public Transform vrCamera;
     public HandGestureRecognizer gestureRecognizer;
@@ -9,7 +9,7 @@ public class Canvas: MonoBehaviour
     public Vector3 offset = Vector3.zero;
 
     public Material lineMaterial;
-    public float lineWidth = 1f;
+    public float lineWidth = 0.1f;
     public float minDistanceThreshold = 0.001f;
 
     private LineRenderer currentLine;
@@ -24,7 +24,7 @@ public class Canvas: MonoBehaviour
     {
         UpdateCanvasPositionAndRotation();
 
-        // 检查手势识别和绘制状态
+        // Check gesture recognition and drawing state
         if (gestureRecognizer.ovrHand != null && gestureRecognizer.ovrHand.IsTracked)
         {
             if (gestureRecognizer.IsGestureRecognized() && isFingerTouchingBoard)
@@ -41,12 +41,13 @@ public class Canvas: MonoBehaviour
 
     void UpdateCanvasPositionAndRotation()
     {
+        // Uncomment this section to dynamically position the canvas in VR
         //if (vrCamera != null)
         //{
-        //    // 设置画板位置
+        //    // Set the canvas position
         //    transform.position = vrCamera.position + vrCamera.forward * distance + offset;
 
-        //    // 使画板始终面向玩家
+        //    // Ensure the canvas always faces the player
         //    transform.rotation = Quaternion.LookRotation(transform.position - vrCamera.position, Vector3.up);
         //}
     }
@@ -68,14 +69,14 @@ public class Canvas: MonoBehaviour
         isFingerTouchingBoard = true;
         contactPoint = GetContactPoint(other);
     }
+
     Vector3 GetContactPoint(Collider fingerCollider)
     {
         Vector3 fingerTipPosition = fingerCollider.transform.position;
-
         Vector3 closestPoint = GetComponent<Collider>().ClosestPoint(fingerTipPosition);
-
         return closestPoint;
     }
+
     void StartDrawing()
     {
         if (!isDrawing)
@@ -83,16 +84,16 @@ public class Canvas: MonoBehaviour
             isDrawing = true;
             drawingPoints.Clear();
 
-            // 创建新的线条对象
+            // Create a new line object
             GameObject lineObj = new GameObject("Line");
-            lineObj.transform.SetParent(transform, false); // 将其设置为画板的子对象，不保持世界坐标
+            lineObj.transform.SetParent(transform, false); // Set as a child of the canvas without retaining world coordinates
 
             currentLine = lineObj.AddComponent<LineRenderer>();
             currentLine.material = lineMaterial;
             currentLine.startWidth = lineWidth;
             currentLine.endWidth = lineWidth;
             currentLine.positionCount = 0;
-            currentLine.useWorldSpace = false; // 使用本地坐标空间
+            currentLine.useWorldSpace = false; // Use local coordinate space
 
             Debug.Log("StartDrawing: LineRenderer created.");
         }
@@ -107,7 +108,6 @@ public class Canvas: MonoBehaviour
         }
     }
 
-
     void DrawOnBoard()
     {
         if (currentLine == null)
@@ -118,7 +118,7 @@ public class Canvas: MonoBehaviour
 
         Vector3 localPoint = transform.InverseTransformPoint(contactPoint);
 
-        // 检查与上一个点的距离
+        // Check the distance from the last point
         if (drawingPoints.Count == 0 || Vector3.Distance(drawingPoints[drawingPoints.Count - 1], localPoint) > minDistanceThreshold)
         {
             drawingPoints.Add(localPoint);
@@ -129,7 +129,6 @@ public class Canvas: MonoBehaviour
         }
     }
 
-
     void DrawSmoothedLine()
     {
         if (currentLine == null || drawingPoints.Count < 2)
@@ -137,7 +136,7 @@ public class Canvas: MonoBehaviour
             return;
         }
 
-        int smoothAmount = 10; // 每段曲线的插值点数量，根据需要调整
+        int smoothAmount = 10; // Number of interpolated points per segment, adjust as needed
         List<Vector3> smoothedPoints = new List<Vector3>();
 
         for (int i = 0; i < drawingPoints.Count - 1; i++)
@@ -172,7 +171,4 @@ public class Canvas: MonoBehaviour
 
         return a0 * p0 + a1 * p1 + a2 * p2 + a3 * p3;
     }
-
-
-
 }

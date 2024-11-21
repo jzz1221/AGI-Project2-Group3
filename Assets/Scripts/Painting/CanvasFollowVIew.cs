@@ -1,32 +1,138 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Hands;
+using System; // Import System namespace to use Action
 
 public class CanvasFollowView : MonoBehaviour
 {
     public Transform vrCamera;
     public HandGestureRecognizerWithPainting gestureRecognizer;
     public float distance = 0.3f;
-    public Vector3 offset = Vector3.zero; // 画板相对于相机的偏移量
+    public Vector3 offset = Vector3.zero; // Offset of the canvas relative to the camera
+
+    public Material lineMaterial;
+    public float lineWidth = 0.1f;
+    public float minDistanceThreshold = 0.001f;
+    public bool PaintingMode = false;
+
+    private LineRenderer currentLine;
+    private List<Vector3> drawingPoints = new List<Vector3>();
+
+    private bool isFingerTouchingBoard = false;
+    private Vector3 contactPoint;
+
+    private bool isDrawing = false;
+    private bool canvasLocked = false;
+
+    private Coroutine unlockCanvasCoroutine; // Stores the coroutine for unlocking the canvas
+
+    // Define an event that triggers when drawing finishes, passing the list of drawn points
+    public event Action<List<Vector3>> OnDrawingFinished;
 
     void Update()
     {
-        if (vrCamera != null)
+        // Update canvas position and orientation only if it's not locked
+        if (!canvasLocked && vrCamera != null)
         {
-            // 设置画板位置
             transform.position = vrCamera.position + vrCamera.forward * distance + offset;
-
-            // 设置画板始终面朝玩家
             transform.rotation = Quaternion.LookRotation(transform.position - vrCamera.position, Vector3.up);
         }
+
+        // Check if drawing should start
+        if (gestureRecognizer.ovrHand.IsTracked)
+        {
+            if (PaintingMode)
+            {
+                if (gestureRecognizer.IsGestureRecognized())
+                {
+                    Debug.Log("Gesture recognized!");
+                    Draw();
+                }
+            }
+        }
     }
+
+    private void StartDrawing()
+    {
+        if (!isDrawing)
+        {
+            isDrawing = true;
+            canvasLocked = true; // Lock the canvas to prevent movement
+            drawingPoints.Clear();
+
+            // Create a new line object
+            GameObject lineObj = new GameObject("Line");
+            lineObj.transform.SetParent(transform, false);
+
+            currentLine = lineObj.AddComponent<LineRenderer>();
+            currentLine.material = lineMaterial;
+            currentLine.startWidth = lineWidth;
+            currentLine.endWidth = lineWidth;
+            currentLine.positionCount = 0;
+        }
+    }
+
+    private void StopDrawing()
+    {
+        if (isDrawing)
+        {
+            isDrawing = false;
+            currentLine = null;
+
+            // Only proceed if points were drawn
+            if (drawingPoints.Count > 0)
+            {
+                // Trigger the OnDrawingFinished event, passing the drawn points
+                OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+            }
+
+            drawingPoints.Clear();
+        }
+    }
+
+    private void Draw()
+    {
+        // Initialize drawing if it hasn't started
+        if (!isDrawing)
+        {
+            StartDrawing();
+        }
+
+        Vector3 fingerTipPosition = gestureRecognizer.GetIndexFingerTipPosition();
+        Debug.Log("Finger Tip Position: " + fingerTipPosition);
+        drawingPoints.Add(fingerTipPosition);
+        currentLine.positionCount = drawingPoints.Count;
+        currentLine.SetPositions(drawingPoints.ToArray());
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("_______enter the canvas_______");
-        gestureRecognizer.PaintingMode = true;
+        Debug.Log("Finger entered the canvas.");
+        if (unlockCanvasCoroutine != null)
+        {
+            StopCoroutine(unlockCanvasCoroutine); // Stop any ongoing unlock coroutine
+            unlockCanvasCoroutine = null;
+        }
+        PaintingMode = true;
+        // StartDrawing is no longer called here
     }
 
     private void OnTriggerExit(Collider other)
     {
-        gestureRecognizer.PaintingMode = false;
+        PaintingMode = false;
+        StopDrawing();
+        if (unlockCanvasCoroutine != null)
+        {
+            StopCoroutine(unlockCanvasCoroutine);
+        }
+        unlockCanvasCoroutine = StartCoroutine(UnlockCanvasAfterDelay(2f)); // Start a coroutine to unlock the canvas after 2 seconds
     }
 
+    private IEnumerator UnlockCanvasAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canvasLocked = false; // Unlock the canvas
+        unlockCanvasCoroutine = null;
+    }
 }
