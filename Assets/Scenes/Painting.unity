@@ -1387,6 +1387,10 @@ MonoBehaviour:
   gestureRecognizer: {fileID: 652594568}
   distance: 0.42
   offset: {x: 0, y: 0, z: 0}
+  lineMaterial: {fileID: 2100000, guid: 53c16fb5d5c516b40a1f6a8fc34132f3, type: 2}
+  lineWidth: 0.03
+  minDistanceThreshold: 0.001
+  PaintingMode: 0
 --- !u!1 &595815176 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2152300158014882412, guid: bf187b68367fbbc4680e2f3a3677e9a5,

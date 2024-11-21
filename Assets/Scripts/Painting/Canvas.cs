@@ -9,7 +9,7 @@ public class Canvas: MonoBehaviour
     public Vector3 offset = Vector3.zero;
 
     public Material lineMaterial;
-    public float lineWidth = 1f;
+    public float lineWidth = 0.1f;
     public float minDistanceThreshold = 0.001f;
 
     private LineRenderer currentLine;
