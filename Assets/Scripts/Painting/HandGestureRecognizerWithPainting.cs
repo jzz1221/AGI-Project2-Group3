@@ -3,6 +3,7 @@ using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.Input;
 using System.Collections;
+using TMPro;
 
 public class HandGestureRecognizerWithPainting : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class HandGestureRecognizerWithPainting : MonoBehaviour
     private bool isDrawing = false;
     private List<Vector3> drawingPoints = new List<Vector3>();
     private List<OVRBone> bones = new List<OVRBone>();
+    
+    
+    //---------for debug----------
+    public TextMeshProUGUI PointTextforDebug;
     void Start()
     {
         // Assign ovrSkeleton before starting the coroutine
@@ -136,10 +141,13 @@ public class HandGestureRecognizerWithPainting : MonoBehaviour
     private void Draw()
     {
         Vector3 fingerTipPosition = GetIndexFingerTipPosition();
+        
         //Debug.Log("-----------"+fingerTipPosition+"----------");
         drawingPoints.Add(fingerTipPosition);
         lineRenderer.positionCount = drawingPoints.Count;
         lineRenderer.SetPositions(drawingPoints.ToArray());
+        
+        
     }
 
     public Vector3 GetIndexFingerTipPosition()

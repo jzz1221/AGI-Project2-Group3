@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
 using System; // Import System namespace to use Action
+using TMPro;
 
 public class CanvasFollowView : MonoBehaviour
 {
@@ -26,9 +27,21 @@ public class CanvasFollowView : MonoBehaviour
     private bool canvasLocked = false;
 
     private Coroutine unlockCanvasCoroutine; // Stores the coroutine for unlocking the canvas
+    
+    public Plane paintingPlane;
+    public Transform paintingPlaneTransform;
+    public Transform reslutPlaneTransform;
 
+    //---------for debug----------
+    public TextMeshProUGUI PointTextforDebug;
+    public TextMeshProUGUI ResultText;
     // Define an event that triggers when drawing finishes, passing the list of drawn points
     public event Action<List<Vector3>> OnDrawingFinished;
+
+    void Start()
+    {
+        paintingPlane = new Plane(paintingPlaneTransform.up, paintingPlaneTransform.position);
+    }
 
     void Update()
     {
@@ -81,10 +94,11 @@ public class CanvasFollowView : MonoBehaviour
             currentLine = null;
 
             // Only proceed if points were drawn
-            if (drawingPoints.Count > 0)
+            if (drawingPoints.Count > 2)
             {
                 // Trigger the OnDrawingFinished event, passing the drawn points
                 OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+                
             }
 
             drawingPoints.Clear();
@@ -104,6 +118,15 @@ public class CanvasFollowView : MonoBehaviour
         drawingPoints.Add(fingerTipPosition);
         currentLine.positionCount = drawingPoints.Count;
         currentLine.SetPositions(drawingPoints.ToArray());
+        PointTextforDebug.text = $"Finger Position:\nX: {fingerTipPosition.x:F2}, Y: {fingerTipPosition.y:F2}, Z: {fingerTipPosition.z:F2}";
+
+        
+    }
+    
+    public void UpdateResultText(string result)
+    {
+        //PointTextforDebug.text = $"Points:{points}";
+        ResultText.text = $"Result: {result}";
     }
 
     void OnTriggerEnter(Collider other)
