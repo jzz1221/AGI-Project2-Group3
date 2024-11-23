@@ -18,12 +18,18 @@ public class DrawingReceiver : MonoBehaviour
         //Load pre-made gestures
         TextAsset[] gesturesXml = Resources.LoadAll<TextAsset>("GestureSet/10-stylus-MEDIUM/");
         foreach (TextAsset gestureXml in gesturesXml)
+        {
+            Debug.Log($"Loaded gesture: {gestureXml.name}");
             trainingSet.Add(GestureIO.ReadGestureFromXML(gestureXml.text));
+        }
 
         //Load user custom gestures
         string[] filePaths = Directory.GetFiles(Application.persistentDataPath, "*.xml");
         foreach (string filePath in filePaths)
+        {
+            Debug.Log($"Loading file: {filePath}");
             trainingSet.Add(GestureIO.ReadGestureFromFile(filePath));
+        }
         
         paintingPlane = canvasFollowView.paintingPlane;
         ResultPlaneTransform = canvasFollowView.reslutPlaneTransform;
@@ -53,15 +59,17 @@ public class DrawingReceiver : MonoBehaviour
     private void HandleDrawingFinished(List<Vector3> drawingPoints)
     {
         Debug.Log("Drawing finished with " + drawingPoints.Count + " points.");
-        // 计算平面的中点
+        // get the plane position
         Vector3 planeOrigin = paintingPlaneTransform.position;
-        // 将点投影到平面并计算2D坐标
+        // project 3D points on a 2D plane
         List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
+        canvasFollowView.PointTextforDebug.text = $"points number: {drawingPoints.Count}";
         //Debug.unityLogger.Log(projectedPoints);
-        foreach (Vector2 p in projectedPoints)
-        {
-            points.Add(new Point(p.x, p.y, 1)); // StrokeID 固定为 1
-        }
+        if (projectedPoints.Count > 1){
+            foreach (Vector2 p in projectedPoints)
+            {
+                points.Add(new Point(p.x, p.y, 1)); // StrokeID=1
+            }
             //Compare with TraningSet
             Gesture candidate = new Gesture(points.ToArray());
             Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
@@ -70,8 +78,8 @@ public class DrawingReceiver : MonoBehaviour
             canvasFollowView.UpdateResultText(resultOutput);
             //Render 2D points on Plane(Quad)
             Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
-        // Process the array of drawing points here, e.g., generate an image or perform other actions
-        // Example: GenerateImageFromPoints(drawingPoints);
+        }
+        
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)
@@ -90,13 +98,12 @@ public class DrawingReceiver : MonoBehaviour
     
     Vector2 ProjectPointToPlane(Vector3 point, Vector3 planeOrigin)
     {
-        // 将点投影到平面上
+        // project the point on a plane
         Vector3 planePoint = paintingPlane.ClosestPointOnPlane(point);
 
-        // 相对于平面中点转换为2D坐标，保留 x 和 y
+        // generate the Relative coordinates of a relative plane 相对于平面中点转换为2D坐标，保留 x 和 y
         Vector2 projectedPoint = new Vector2(planePoint.x - planeOrigin.x, planePoint.y - planeOrigin.y);
-
-        // 打印结果
+        
         Debug.Log($"Projected 2D Point: {projectedPoint}");
         
         return projectedPoint;
@@ -112,8 +119,8 @@ public class DrawingReceiver : MonoBehaviour
         // 添加 LineRenderer 组件
         LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 设置默认材质
-        lineRenderer.startWidth = 0.02f; // 线宽
-        lineRenderer.endWidth = 0.02f;
+        lineRenderer.startWidth = 0.01f; // 线宽
+        lineRenderer.endWidth = 0.01f;
         lineRenderer.positionCount = projectedPoints.Count + 1; // 顶点数量 +1 用于闭合形状
 
         // 将 2D 点映射到 3D 世界坐标，并设置到 LineRenderer
@@ -122,14 +129,14 @@ public class DrawingReceiver : MonoBehaviour
             Vector2 point2D = projectedPoints[i];
 
             // 将 2D 点转换为 3D 点 (X, Z 平面)，并设置为平面 Transform 的本地坐标
-            Vector3 point3D = paintingPlane.TransformPoint(new Vector3(point2D.x, point2D.y, 0));
-            //Vector3 point3D = new Vector3(point2D.x, 0, point2D.y);
+            //Vector3 point3D = paintingPlane.TransformPoint(new Vector3(point2D.x, point2D.y, 0));
+            Vector3 point3D = new Vector3(point2D.x, 0, point2D.y);
             lineRenderer.SetPosition(i, point3D);
         }
 
         // 闭合线条：最后一个点连接到第一个点
-        Vector3 firstPoint = paintingPlane.TransformPoint(new Vector3(projectedPoints[0].x, projectedPoints[0].y, 0));
-        lineRenderer.SetPosition(projectedPoints.Count, firstPoint);
+        //Vector3 firstPoint = paintingPlane.TransformPoint(new Vector3(projectedPoints[0].x, projectedPoints[0].y, 0));
+        //lineRenderer.SetPosition(projectedPoints.Count, firstPoint);
 
         Debug.Log("2D Points Rendered on Plane");
     }

@@ -58,6 +58,7 @@
  * SUCH DAMAGE.
 **/
 using System;
+using UnityEngine;
 
 namespace PDollarGestureRecognizer
 {
@@ -68,7 +69,12 @@ namespace PDollarGestureRecognizer
         /// </summary>
         public static float SqrEuclideanDistance(Point a, Point b)
         {
-            return (a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y);
+            if(a != null && b != null) return (a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y);
+            else
+            {
+                Debug.Log("No points found, point a" + a + " point, b " + b + " point");
+                return 0;
+            }
         }
 
         /// <summary>

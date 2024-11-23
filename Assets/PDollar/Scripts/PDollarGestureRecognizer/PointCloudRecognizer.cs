@@ -145,16 +145,12 @@ namespace PDollarGestureRecognizer
                             index = j;
                         }
                     }
-                //matched[index] = true; // point index from the 2nd cloud is matched to point i from the 1st cloud
-                if (index >= 0 && index < n)
+                if (index == -1)
                 {
-                    matched[index] = true; // point index from the 2nd cloud is matched to point i from the 1st cloud
+                    Debug.LogWarning($"All points in points2 are matched. No match for point {i}.");
+                    break; // 提前退出，或根据需求继续处理
                 }
-                else
-                {
-                    Debug.LogError($"Invalid index: {index}. Ensure that all points are properly matched.");
-                    break; 
-                }
+                matched[index] = true; // point index from the 2nd cloud is matched to point i from the 1st cloud
                 float weight = 1.0f - ((i - startIndex + n) % n) / (1.0f * n);
                 sum += weight * minDistance; // weight each distance with a confidence coefficient that decreases from 1 to 0
                 i = (i + 1) % n;

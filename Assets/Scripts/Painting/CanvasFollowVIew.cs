@@ -118,7 +118,7 @@ public class CanvasFollowView : MonoBehaviour
         drawingPoints.Add(fingerTipPosition);
         currentLine.positionCount = drawingPoints.Count;
         currentLine.SetPositions(drawingPoints.ToArray());
-        PointTextforDebug.text = $"Finger Position:\nX: {fingerTipPosition.x:F2}, Y: {fingerTipPosition.y:F2}, Z: {fingerTipPosition.z:F2}";
+        //PointTextforDebug.text = $"Finger Position:\nX: {fingerTipPosition.x:F2}, Y: {fingerTipPosition.y:F2}, Z: {fingerTipPosition.z:F2}";
 
         
     }
@@ -144,7 +144,7 @@ public class CanvasFollowView : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         PaintingMode = false;
-        StopDrawing();
+        //StopDrawing();
         if (unlockCanvasCoroutine != null)
         {
             StopCoroutine(unlockCanvasCoroutine);
@@ -155,6 +155,7 @@ public class CanvasFollowView : MonoBehaviour
     private IEnumerator UnlockCanvasAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        StopDrawing();
         canvasLocked = false; // Unlock the canvas
         unlockCanvasCoroutine = null;
     }
