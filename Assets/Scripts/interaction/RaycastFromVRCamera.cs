@@ -39,7 +39,7 @@ public class RaycastFromVRCamera : MonoBehaviour
                 if (renderer != null)
                 {
                     originalColor = renderer.material.color; // Save the original color
-                    renderer.material.color = Color.red; // Change the color to red
+                    renderer.material.color = Color.yellow; // Change the color to red
                 }
             }
         }
