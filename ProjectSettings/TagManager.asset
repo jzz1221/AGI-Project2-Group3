@@ -11,6 +11,7 @@ TagManager:
   - LocoText
   - Canvas
   - FingerTip
+  - zombie
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - CanvasLayer
   - Water
   - UI
-  - 
+  - zombie
   - 
   - 
   - 

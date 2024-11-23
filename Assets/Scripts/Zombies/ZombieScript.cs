@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ZombieScript : MonoBehaviour
 {   
-    private int speed;
+    private float speed;
     private GameObject player;
     private GameObject spawner;
 
@@ -30,7 +30,7 @@ public class ZombieScript : MonoBehaviour
         spawner = s;
     }
 
-    public void SetSpeed(int s) {
+    public void SetSpeed(float s) {
         speed = s;
     }
 

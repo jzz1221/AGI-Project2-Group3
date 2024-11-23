@@ -8,7 +8,7 @@ public class ZombieSpawnerScript : MonoBehaviour
     [SerializeField] int zombieAmount;
     [SerializeField] int radius;
     [SerializeField] int delay;
-    [SerializeField] int zombieSpeed;
+    [SerializeField] float zombieSpeed;
     [SerializeField] GameObject zombie;
     [SerializeField] GameObject player;
     private bool zombiesDead = false;

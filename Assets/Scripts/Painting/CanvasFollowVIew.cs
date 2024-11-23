@@ -168,7 +168,7 @@ public class CanvasFollowView : MonoBehaviour
         {
             StopCoroutine(unlockCanvasCoroutine);
         }
-        unlockCanvasCoroutine = StartCoroutine(UnlockCanvasAfterDelay(2f)); // Start a coroutine to unlock the canvas after 2 seconds
+        unlockCanvasCoroutine = StartCoroutine(UnlockCanvasAfterDelay(1f)); // Start a coroutine to unlock the canvas after 2 seconds
     }
 
     private IEnumerator UnlockCanvasAfterDelay(float delay)
