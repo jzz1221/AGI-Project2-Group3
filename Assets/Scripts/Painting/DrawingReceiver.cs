@@ -121,24 +121,19 @@ public class DrawingReceiver : MonoBehaviour
         lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 设置默认材质
         lineRenderer.startWidth = 0.01f; // 线宽
         lineRenderer.endWidth = 0.01f;
-        lineRenderer.positionCount = projectedPoints.Count + 1; // 顶点数量 +1 用于闭合形状
+        lineRenderer.positionCount = projectedPoints.Count; // 顶点数量与点的数量相同，不再加 1
 
         // 将 2D 点映射到 3D 世界坐标，并设置到 LineRenderer
         for (int i = 0; i < projectedPoints.Count; i++)
         {
             Vector2 point2D = projectedPoints[i];
 
-            // 将 2D 点转换为 3D 点 (X, Z 平面)，并设置为平面 Transform 的本地坐标
-            //Vector3 point3D = paintingPlane.TransformPoint(new Vector3(point2D.x, point2D.y, 0));
-            Vector3 point3D = new Vector3(point2D.x, 0, point2D.y);
+            // 将 2D 点转换为 3D 点 (X, Y 平面)，并设置为平面 Transform 的本地坐标
+            Vector3 point3D = paintingPlane.TransformPoint(new Vector3(point2D.x, point2D.y, 0));
             lineRenderer.SetPosition(i, point3D);
         }
 
-        // 闭合线条：最后一个点连接到第一个点
-        //Vector3 firstPoint = paintingPlane.TransformPoint(new Vector3(projectedPoints[0].x, projectedPoints[0].y, 0));
-        //lineRenderer.SetPosition(projectedPoints.Count, firstPoint);
-
-        Debug.Log("2D Points Rendered on Plane");
+        Debug.Log("2D Points Rendered on Plane without closure.");
     }
 }
 
