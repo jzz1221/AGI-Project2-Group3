@@ -19,6 +19,7 @@ public class CanvasFollowView : MonoBehaviour
 
     private LineRenderer currentLine;
     private List<Vector3> drawingPoints = new List<Vector3>();
+    private int drawingPointsNumber = 0;
 
     private bool isFingerTouchingBoard = false;
     private Vector3 contactPoint;
@@ -37,6 +38,7 @@ public class CanvasFollowView : MonoBehaviour
     public TextMeshProUGUI ResultText;
     // Define an event that triggers when drawing finishes, passing the list of drawn points
     public event Action<List<Vector3>> OnDrawingFinished;
+    public event Action<List<Vector3>> OnSymbolMatchingRequested;
 
     void Start()
     {
@@ -77,7 +79,7 @@ public class CanvasFollowView : MonoBehaviour
             // Create a new line object
             GameObject lineObj = new GameObject("Line");
             lineObj.transform.SetParent(transform, false);
-
+            
             currentLine = lineObj.AddComponent<LineRenderer>();
             currentLine.material = lineMaterial;
             currentLine.startWidth = lineWidth;
@@ -116,11 +118,28 @@ public class CanvasFollowView : MonoBehaviour
         Vector3 fingerTipPosition = gestureRecognizer.GetIndexFingerTipPosition();
         Debug.Log("Finger Tip Position: " + fingerTipPosition);
         drawingPoints.Add(fingerTipPosition);
+        drawingPointsNumber++;
+        if (drawingPointsNumber > 120)
+        {
+            StartCoroutine(TriggerDrawingFinishedAsync(new List<Vector3>(drawingPoints)));
+            drawingPointsNumber = 0;
+        }
         currentLine.positionCount = drawingPoints.Count;
         currentLine.SetPositions(drawingPoints.ToArray());
-        //PointTextforDebug.text = $"Finger Position:\nX: {fingerTipPosition.x:F2}, Y: {fingerTipPosition.y:F2}, Z: {fingerTipPosition.z:F2}";
+        PointTextforDebug.text = $"Drawingpointsnumber"+drawingPointsNumber + "total points number" + drawingPoints.Count;
 
-        
+        if (drawingPoints.Count > 250)
+        {
+            //clean the first symbol
+            //first 50points or?
+        }
+    }
+    
+    private IEnumerator TriggerDrawingFinishedAsync(List<Vector3> points)
+    {
+        yield return null;
+
+        OnSymbolMatchingRequested?.Invoke(points);
     }
     
     public void UpdateResultText(string result)

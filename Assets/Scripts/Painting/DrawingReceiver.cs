@@ -39,6 +39,7 @@ public class DrawingReceiver : MonoBehaviour
         {
             // Subscribe to the OnDrawingFinished event
             canvasFollowView.OnDrawingFinished += HandleDrawingFinished;
+            canvasFollowView.OnSymbolMatchingRequested += HandleMatchingRequestedl;
         }
         else
         {
@@ -51,35 +52,39 @@ public class DrawingReceiver : MonoBehaviour
         if (canvasFollowView != null)
         {
             // Unsubscribe from the event to prevent potential memory leaks
+            canvasFollowView.OnSymbolMatchingRequested -= HandleMatchingRequestedl;
             canvasFollowView.OnDrawingFinished -= HandleDrawingFinished;
         }
     }
 
     // Event handler method called when drawing is finished
+    private void HandleMatchingRequestedl(List<Vector3> drawingPoints)
+    {
+        Debug.Log("Processing gesture matching...");
+        Vector3 planeOrigin = paintingPlaneTransform.position;
+        List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
+        points.Clear();
+        foreach (Vector2 p in projectedPoints)
+        {
+            points.Add(new Point(p.x, p.y, 1));
+        }
+
+        Gesture candidate = new Gesture(points.ToArray());
+        Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
+
+        string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
+        canvasFollowView.UpdateResultText(resultOutput);
+    }
+
+    // Event handler method called when drawing is finished
     private void HandleDrawingFinished(List<Vector3> drawingPoints)
     {
-        Debug.Log("Drawing finished with " + drawingPoints.Count + " points.");
-        // get the plane position
+
+        //Render 2D points on Plane(Quad)
         Vector3 planeOrigin = paintingPlaneTransform.position;
-        // project 3D points on a 2D plane
         List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
-        canvasFollowView.PointTextforDebug.text = $"points number: {drawingPoints.Count}";
-        //Debug.unityLogger.Log(projectedPoints);
-        if (projectedPoints.Count > 1){
-            foreach (Vector2 p in projectedPoints)
-            {
-                points.Add(new Point(p.x, p.y, 1)); // StrokeID=1
-            }
-            //Compare with TraningSet
-            Gesture candidate = new Gesture(points.ToArray());
-            Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
-            //Output result to UI canvas
-            string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
-            canvasFollowView.UpdateResultText(resultOutput);
-            //Render 2D points on Plane(Quad)
-            Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
-        }
-        
+
+        Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)
