@@ -1,0 +1,50 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 10.10.2017 12:13:51
+
+newmtl Campana_LR01
+	Ns 9.999999
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588235 0.588235 0.588235
+	Kd 0.588235 0.588235 0.588235
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka E:\3D Hentry\chinese-bell\end1\Campana_DiffuseMap.jpg
+	map_Kd E:\3D Hentry\chinese-bell\end1\Campana_DiffuseMap.jpg
+	map_bump E:\3D Hentry\chinese-bell\end1\Campana_HR002_003NormalsMap.jpg
+	bump E:\3D Hentry\chinese-bell\end1\Campana_HR002_003NormalsMap.jpg
+
+newmtl Telaio_Baked01
+	Ns 9.999999
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588235 0.588235 0.588235
+	Kd 0.588235 0.588235 0.588235
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka E:\3D Hentry\chinese-bell\end1\Telaio01CompleteMap.jpg
+	map_Kd E:\3D Hentry\chinese-bell\end1\Telaio01CompleteMap.jpg
+	map_bump E:\3D Hentry\chinese-bell\end1\Telaio01NMap.jpg
+	bump E:\3D Hentry\chinese-bell\end1\Telaio01NMap.jpg
+
+newmtl Chain01
+	Ns 9.999999
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588235 0.588235 0.588235
+	Kd 0.588235 0.588235 0.588235
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka E:\3D Hentry\chinese-bell\end1\Chain01DiffuseMap.jpg
+	map_Kd E:\3D Hentry\chinese-bell\end1\Chain01DiffuseMap.jpg
+	map_bump E:\3D Hentry\chinese-bell\end1\Campana_HR002_003NormalsMap.jpg
+	bump E:\3D Hentry\chinese-bell\end1\Campana_HR002_003NormalsMap.jpg
