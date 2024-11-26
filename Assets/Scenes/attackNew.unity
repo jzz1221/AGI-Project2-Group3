@@ -1292,7 +1292,6 @@ GameObject:
   - component: {fileID: 408912008}
   - component: {fileID: 408912007}
   - component: {fileID: 408912009}
-  - component: {fileID: 408912010}
   m_Layer: 3
   m_Name: MenuPanel
   m_TagString: Canvas
@@ -1386,25 +1385,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.01}
   m_Center: {x: 0, y: 0, z: -0.01}
---- !u!114 &408912010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408912003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6a8bbabfb51303428909966d8d0fc3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vrCamera: {fileID: 1825247042}
-  gestureRecognizer: {fileID: 652594566}
-  distance: 0.42
-  offset: {x: 0, y: 0, z: 0}
-  lineMaterial: {fileID: 0}
-  lineWidth: 1
-  minDistanceThreshold: 0.001
 --- !u!1 &467335347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,7 +2045,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 652594567}
-  - component: {fileID: 652594566}
   - component: {fileID: 652594568}
   - component: {fileID: 652594569}
   m_Layer: 0
@@ -2075,19 +2054,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &652594566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 652594565}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cab2f6b8f425ac047a9fce990290331d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ovrHand: {fileID: 4953795794485462179}
 --- !u!4 &652594567
 Transform:
   m_ObjectHideFlags: 0
