@@ -63,6 +63,7 @@ public class DrawingReceiver : MonoBehaviour
         Debug.Log("Processing gesture matching...");
         Vector3 planeOrigin = paintingPlaneTransform.position;
         List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
+        
         points.Clear();
         foreach (Vector2 p in projectedPoints)
         {
@@ -74,6 +75,19 @@ public class DrawingReceiver : MonoBehaviour
 
         string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
         canvasFollowView.UpdateResultText(resultOutput);
+        
+        if (gestureResult.Score >= 0.8f)
+        {
+            Debug.Log("High confidence detected! Updating material and clearing line.");
+        
+            // Change line material
+            Material newMaterial = new Material(Shader.Find("Sprites/Default"));
+            newMaterial.color = Color.blue; // Example: Change the color to blue
+            canvasFollowView.UpdateLineMaterial(newMaterial);
+
+            // Clear previous line
+            //canvasFollowView.ClearPreviousLine();
+        }
     }
 
     // Event handler method called when drawing is finished
@@ -126,6 +140,7 @@ public class DrawingReceiver : MonoBehaviour
         lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 设置默认材质
         lineRenderer.startWidth = 0.01f; // 线宽
         lineRenderer.endWidth = 0.01f;
+        lineRenderer.material.color = Color.white;
         lineRenderer.positionCount = projectedPoints.Count; // 顶点数量与点的数量相同，不再加 1
 
         // 将 2D 点映射到 3D 世界坐标，并设置到 LineRenderer
