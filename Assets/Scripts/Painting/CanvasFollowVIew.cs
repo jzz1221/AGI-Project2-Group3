@@ -21,9 +21,6 @@ public class CanvasFollowView : MonoBehaviour
     private List<Vector3> drawingPoints = new List<Vector3>();
     private int drawingPointsNumber = 0;
 
-    private bool isFingerTouchingBoard = false;
-    private Vector3 contactPoint;
-
     private bool isDrawing = false;
     private bool canvasLocked = false;
 
@@ -94,7 +91,31 @@ public class CanvasFollowView : MonoBehaviour
             currentLine.positionCount = 0;
         }
     }
-    
+
+    private void StopDrawing()
+    {
+        if (isDrawing)
+        {
+            isDrawing = false;
+
+            // Only proceed if points were drawn
+            if (drawingPoints.Count > 2)
+            {
+                // Trigger the OnDrawingFinished event, passing the drawn points
+                OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+            }
+
+            // Clear the current line
+            if (currentLine != null)
+            {
+                Destroy(currentLine.gameObject); // Destroy the line's GameObject
+                currentLine = null;
+            }
+
+            drawingPoints.Clear(); // Clear the drawing points list
+        }
+    }
+
     private void Draw()
     {
         // Initialize drawing if it hasn't started
@@ -228,7 +249,7 @@ public class CanvasFollowView : MonoBehaviour
         {
             StopCoroutine(unlockCanvasCoroutine);
         }
-        unlockCanvasCoroutine = StartCoroutine(UnlockCanvasAfterDelay(1f)); // Start a coroutine to unlock the canvas after 2 seconds
+        unlockCanvasCoroutine = StartCoroutine(UnlockCanvasAfterDelay(1f)); // Start a coroutine to unlock the canvas after 1 second
     }
 
     private IEnumerator UnlockCanvasAfterDelay(float delay)
