@@ -38306,6 +38306,105 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1001 &718558181
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.045256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.927
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.5258412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.52502906
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.8510843
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 116.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916485612655230635, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610104560541369678, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      propertyPath: m_Name
+      value: Prefab_Chinese_Vampire
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7610104560541369678, guid: 43e3eb9b8207530418044904b0c5fbbf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 718558183}
+  m_SourcePrefab: {fileID: 100100000, guid: 43e3eb9b8207530418044904b0c5fbbf, type: 3}
+--- !u!1 &718558182 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7610104560541369678, guid: 43e3eb9b8207530418044904b0c5fbbf,
+    type: 3}
+  m_PrefabInstance: {fileID: 718558181}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &718558183
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718558182}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 17bf895cddd1efc45ab596a20dbbc27a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &720957179
 GameObject:
   m_ObjectHideFlags: 0
@@ -135934,3 +136033,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1915621904}
+  - {fileID: 718558181}
