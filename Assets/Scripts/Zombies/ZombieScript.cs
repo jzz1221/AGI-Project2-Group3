@@ -7,15 +7,18 @@ public class ZombieScript : MonoBehaviour
     private float speed;
     private GameObject player;
     private GameObject spawner;
+    private bool active;
 
     void Start()
     {
-        
+        active = true;
     }
 
     void Update()
     {
-        AttackPlayer();
+        if(active) {
+            AttackPlayer();
+        }
     }
 
     void AttackPlayer() {
@@ -36,6 +39,12 @@ public class ZombieScript : MonoBehaviour
 
     public void RemoveZombie() {
         spawner.GetComponent<ZombieSpawnerScript>().UpdateZombiesLeft();
+        active = false;
+        StartCoroutine(DestroyZombie());
+    }
+
+    private IEnumerator DestroyZombie() {
+        yield return new WaitForSeconds(3f);
         Destroy(gameObject);
     }
 }
