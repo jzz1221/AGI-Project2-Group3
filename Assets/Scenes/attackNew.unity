@@ -4179,8 +4179,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vrCamera: {fileID: 1825247042}
-  maxRayDistance: 100
-  raycastLayerMask:
+  detectionRadius: 100
+  fieldOfViewAngle: 45
+  zombieLayerMask:
     serializedVersion: 2
     m_Bits: 64
 --- !u!4 &1273026899

@@ -4,67 +4,84 @@ using UnityEngine;
 
 public class RaycastFromVRCamera : MonoBehaviour
 {
-    public Transform vrCamera; // The Transform of the VR camera; should be assigned in the Inspector
-    public float maxRayDistance = 100.0f; // The maximum distance for the raycast
-    public LayerMask raycastLayerMask; // Layer mask to specify which layers the raycast should detect
-    public static ZombieScript currentTargetZombie = null;
+    public Transform vrCamera; // VR camera's Transform
+    public float detectionRadius = 100.0f; // Detection radius
+    public float fieldOfViewAngle = 30.0f; // Field of view angle
+    public LayerMask zombieLayerMask; // Layer mask to filter only zombies
+    public static ZombieScript currentTargetZombie = null; // The closest zombie target
 
-    private GameObject lastHitObject = null; // Stores the last object hit by the ray
-    private Color originalColor; // Stores the original color of the last hit object
+    private GameObject lastHitObject = null; // Previously detected object
+    private Color originalColor; // Original color of the previously detected object
 
     void Update()
     {
-        // Get the position and forward direction of the VR camera
-        Vector3 origin = vrCamera.position; // The starting position of the ray
-        Vector3 direction = vrCamera.forward; // The forward direction of the VR camera
+        // Get all colliders within the detection radius
+        Collider[] hitColliders = Physics.OverlapSphere(vrCamera.position, detectionRadius, zombieLayerMask);
 
-        // Optional: Draw the ray for debugging purposes
-        Debug.DrawRay(origin, direction * maxRayDistance, Color.green);
+        float halfFOV = fieldOfViewAngle / 2f; // Half of the field of view angle
+        float closestDistance = Mathf.Infinity; // Initialize with a very large distance
+        ZombieScript closestZombie = null; // Placeholder for the closest zombie
+        GameObject closestHitObject = null; // Placeholder for the closest hit object
 
-        // Cast a ray and check if it hits an object
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, maxRayDistance, raycastLayerMask))
+        Vector3 origin = vrCamera.position; // Camera position
+        Vector3 forward = vrCamera.forward; // Camera forward direction
+
+        foreach (Collider collider in hitColliders)
         {
-            GameObject hitObject = hit.collider.gameObject; // The object currently hit by the ray
-            Debug.Log("Raycast hit object: " + hitObject.name);
+            // Get direction from the camera to the collider
+            Vector3 directionToCollider = collider.transform.position - origin;
 
-            ZombieScript zombieScript = hitObject.GetComponentInParent<ZombieScript>();
-            if (zombieScript != null)
+            // Calculate angle between the camera's forward direction and the object
+            float angle = Vector3.Angle(forward, directionToCollider);
+
+            // Check if the object is within the field of view
+            if (angle < halfFOV)
             {
-                currentTargetZombie = zombieScript;
-                Debug.Log("Current Target Zombie: " + currentTargetZombie);
-            }
-            else
-            {
-                currentTargetZombie = null;
-            }
+                float distance = directionToCollider.magnitude; // Distance to the collider
 
-            if (hitObject != lastHitObject)
-            {
-                // Restore the color of the last hit object
-                ResetLastHitObjectColor();
-
-                // Update the last hit object to the new one
-                lastHitObject = hitObject;
-
-                // Store the original color of the current hit object
-                Renderer renderer = hitObject.GetComponent<Renderer>();
-                if (renderer != null)
+                // Check if this object is closer than the previously detected one
+                ZombieScript zombieScript = collider.GetComponentInParent<ZombieScript>();
+                if (zombieScript != null && !zombieScript.isRemoved) // Skip removed zombies
                 {
-                    originalColor = renderer.material.color; // Save the original color
-                    renderer.material.color = Color.yellow; // Change the color to yellow
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestHitObject = collider.gameObject;
+                        closestZombie = zombieScript; // Get the zombie script
+                    }
                 }
             }
         }
+
+        // Handle the closest detected zombie
+        if (closestHitObject != null)
+        {
+            if (closestHitObject != lastHitObject)
+            {
+                ResetLastHitObjectColor(); // Reset the previous object's color
+                lastHitObject = closestHitObject;
+
+                // Highlight the new closest object
+                Renderer renderer = closestHitObject.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    originalColor = renderer.material.color;
+                    renderer.material.color = Color.yellow; // Change the color to highlight it
+                }
+            }
+
+            currentTargetZombie = closestZombie; // Update the current target
+            Debug.Log("Closest Zombie Detected: " + currentTargetZombie);
+        }
         else
         {
-            // If the ray does not hit any object, restore the last hit object's color
-            ResetLastHitObjectColor();
-            lastHitObject = null; // Clear the record of the last hit object
+            ResetLastHitObjectColor(); // Reset if no zombies are detected
+            lastHitObject = null;
             currentTargetZombie = null;
         }
     }
 
-    // Restores the color of the last hit object to its original color
+    // Reset the color of the previously highlighted object
     private void ResetLastHitObjectColor()
     {
         if (lastHitObject != null)
@@ -72,7 +89,7 @@ public class RaycastFromVRCamera : MonoBehaviour
             Renderer renderer = lastHitObject.GetComponent<Renderer>();
             if (renderer != null)
             {
-                renderer.material.color = originalColor; // Restore the original color
+                renderer.material.color = originalColor; // Restore original color
             }
         }
     }
