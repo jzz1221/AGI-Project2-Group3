@@ -680,7 +680,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: points number
+  m_text: handpoint
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -707,8 +707,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 7
-  m_fontSizeBase: 7
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1292,6 +1292,7 @@ GameObject:
   - component: {fileID: 408912008}
   - component: {fileID: 408912007}
   - component: {fileID: 408912009}
+  - component: {fileID: 408912010}
   m_Layer: 3
   m_Name: MenuPanel
   m_TagString: Canvas
@@ -1385,6 +1386,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.01}
   m_Center: {x: 0, y: 0, z: -0.01}
+--- !u!114 &408912010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 408912003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a8bbabfb51303428909966d8d0fc3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vrCamera: {fileID: 1825247042}
+  gestureRecognizer: {fileID: 652594566}
+  distance: 0.42
+  offset: {x: 0, y: 0, z: 0}
+  lineMaterial: {fileID: 0}
+  lineWidth: 1
+  minDistanceThreshold: 0.001
 --- !u!1 &467335347
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,7 +1629,7 @@ MonoBehaviour:
   gestureRecognizer: {fileID: 652594568}
   distance: 0.42
   offset: {x: 0, y: 0, z: 0}
-  lineMaterial: {fileID: 2100000, guid: bbb56ac3cf3c61a46ab3887c0fdbda8f, type: 2}
+  lineMaterial: {fileID: 2100000, guid: f5ccd52dc494e054fbe7d7161dcabe25, type: 2}
   lineWidth: 0.01
   minDistanceThreshold: 0.001
   PaintingMode: 0
@@ -2016,7 +2036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieAmount: 10
-  radius: 16
+  radius: 20
   delay: 2
   zombieSpeed: 0.5
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}
@@ -2045,6 +2065,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 652594567}
+  - component: {fileID: 652594566}
   - component: {fileID: 652594568}
   - component: {fileID: 652594569}
   m_Layer: 0
@@ -2054,6 +2075,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &652594566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 652594565}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab2f6b8f425ac047a9fce990290331d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ovrHand: {fileID: 4953795794485462179}
 --- !u!4 &652594567
 Transform:
   m_ObjectHideFlags: 0
@@ -2099,7 +2133,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasFollowView: {fileID: 525759474}
-  lineMaterial: {fileID: 2100000, guid: bbb56ac3cf3c61a46ab3887c0fdbda8f, type: 2}
 --- !u!1 &653263828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4115,56 +4148,6 @@ MonoBehaviour:
     - {x: -0.06583831, y: 0.023903208, z: -0.37277922, w: 0.92527276}
     - {x: -0.023973562, y: 0.042077754, z: 0.60702366, w: -0.7932068}
   _ghostProvider: {fileID: 0}
---- !u!1 &1273026897
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1273026899}
-  - component: {fileID: 1273026898}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1273026898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273026897}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa59a3d94adb82c40b7f78178d523fe5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vrCamera: {fileID: 1825247042}
-  detectionRadius: 100
-  fieldOfViewAngle: 45
-  zombieLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!4 &1273026899
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273026897}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.64754057, y: 0.44576225, z: 1.6718923}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1304190911
 GameObject:
   m_ObjectHideFlags: 0
@@ -21533,4 +21516,3 @@ SceneRoots:
   - {fileID: 525759468}
   - {fileID: 1876700900}
   - {fileID: 647570800}
-  - {fileID: 1273026899}
