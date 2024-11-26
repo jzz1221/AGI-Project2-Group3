@@ -92,32 +92,36 @@ public class HandGestureRecognizerWithPainting : MonoBehaviour
     // Method to check if the gesture is recognized
     public bool IsGestureRecognized()
     {
-        // Use GetFingerPinchStrength to estimate finger curl
-        float indexFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
-        Debug.Log("-----------indexFingerCurl:" + indexFingerCurl + "----------");
+        if (bones != null && bones.Count > 0)
+        {
+            // Use GetFingerPinchStrength to estimate finger curl
+            float indexFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
+            Debug.Log("-----------indexFingerCurl:" + indexFingerCurl + "----------");
 
-        float middleFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
-        float ringFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Ring);
-        float pinkyFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Pinky);
-        float thumbCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
+            float middleFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
+            float ringFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Ring);
+            float pinkyFingerCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Pinky);
+            float thumbCurl = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
 
-        // Define thresholds
-        float extendedThreshold = 0.2f; // Lower values mean more extended
-        float curledThreshold = 0.6f;   // Higher values mean more curled
+            // Define thresholds
+            float extendedThreshold = 0.2f; // Lower values mean more extended
+            float curledThreshold = 0.6f; // Higher values mean more curled
 
-        // Check if index and middle fingers are extended
-        bool isIndexFingerExtended = indexFingerCurl < extendedThreshold;
-        bool isMiddleFingerExtended = middleFingerCurl < extendedThreshold;
+            // Check if index and middle fingers are extended
+            bool isIndexFingerExtended = indexFingerCurl < extendedThreshold;
+            bool isMiddleFingerExtended = middleFingerCurl < extendedThreshold;
 
-        // Check if other fingers are curled
-        bool isRingFingerCurled = ringFingerCurl > curledThreshold;
-        bool isPinkyFingerCurled = pinkyFingerCurl > curledThreshold;
-        //bool isThumbCurled = thumbCurl > curledThreshold;
+            // Check if other fingers are curled
+            bool isRingFingerCurled = ringFingerCurl > curledThreshold;
+            bool isPinkyFingerCurled = pinkyFingerCurl > curledThreshold;
+            //bool isThumbCurled = thumbCurl > curledThreshold;
 
-        // Return true if the gesture matches
-        //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled && isThumbCurled;
-        //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled;
-        return isIndexFingerExtended && isMiddleFingerExtended;
+            // Return true if the gesture matches
+            //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled && isThumbCurled;
+            //return isIndexFingerExtended && isMiddleFingerExtended && isRingFingerCurled && isPinkyFingerCurled;
+            return isIndexFingerExtended && isMiddleFingerExtended;
+        }
+        return false;
     }
 
     private void StartDrawing()

@@ -161,6 +161,8 @@ public class DrawingReceiver : MonoBehaviour
         lineRenderer.endWidth = 0.01f;
         lineRenderer.material.color = Color.white;
         lineRenderer.positionCount = projectedPoints.Count; // 顶点数量与点的数量相同，不再加 1
+        
+        lineRenderer.useWorldSpace = false;
 
         // 将 2D 点映射到 3D 世界坐标，并设置到 LineRenderer
         for (int i = 0; i < projectedPoints.Count; i++)
@@ -168,11 +170,65 @@ public class DrawingReceiver : MonoBehaviour
             Vector2 point2D = projectedPoints[i];
 
             // 将 2D 点转换为 3D 点 (X, Y 平面)，并设置为平面 Transform 的本地坐标
-            Vector3 point3D = paintingPlane.TransformPoint(new Vector3(point2D.x, point2D.y, 0));
+            Vector3 point3D = new Vector3(point2D.x, point2D.y, 0);
             lineRenderer.SetPosition(i, point3D);
         }
-
+        Transform projectedPointsTransform = lineObj.transform;
+        projectedPointsTransform = CreateTransformForScaledImage(projectedPoints, paintingPlane);
+        
+        lineObj.transform.position = projectedPointsTransform.position;
+        lineObj.transform.localScale = projectedPointsTransform.localScale;
+        
         Debug.Log("2D Points Rendered on Plane without closure.");
     }
+    
+    public Transform CreateTransformForScaledImage(List<Vector2> originalPoints, Transform targetPlane)
+    {
+        // Calculate original bounding box
+        float minX = float.MaxValue, maxX = float.MinValue;
+        float minY = float.MaxValue, maxY = float.MinValue;
+
+        foreach (Vector2 point in originalPoints)
+        {
+            minX = Mathf.Min(minX, point.x);
+            maxX = Mathf.Max(maxX, point.x);
+            minY = Mathf.Min(minY, point.y);
+            maxY = Mathf.Max(maxY, point.y);
+        }
+
+        float originalWidth = maxX - minX;
+        float originalHeight = maxY - minY;
+
+        // Calculate original image center
+        Vector2 originalCenter = new Vector2(minX + originalWidth / 2, minY + originalHeight / 2);
+
+        // Create a new GameObject to represent the Transform of the scaled image
+        GameObject scaledImageObject = new GameObject("ScaledImageTransform");
+        Transform scaledImageTransform = scaledImageObject.transform;
+
+        // Set the scaledImageTransform's parent to the targetPlane
+        scaledImageTransform.SetParent(targetPlane, false);
+
+        // Align scaledImageTransform to targetPlane's center
+        scaledImageTransform.localPosition = new Vector3(originalCenter.x, 0, originalCenter.y);
+
+        /*// Calculate target plane dimensions
+        Vector3 targetWorldScale = targetPlane.lossyScale;
+        float targetWidth = targetWorldScale.x; // Width in world space
+        float targetHeight = targetWorldScale.z; // Height in world space (assuming X-Z alignment)
+
+        // Calculate scaling factor to maintain aspect ratio
+        float scaleFactor = Mathf.Min(targetWidth / originalWidth, targetHeight / originalHeight);
+
+        // Apply scale to the Transform
+        scaledImageTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1f); // Uniform scaling
+
+        // Offset scaledImageTransform's local position to align original center with targetPlane's center
+        Vector2 offset = originalCenter - Vector2.zero; // Calculate how far the original is offset from (0, 0)
+        scaledImageTransform.localPosition -= new Vector3(offset.x * scaleFactor, 0, offset.y * scaleFactor);*/
+
+        return scaledImageTransform;
+    }
+    
 }
 

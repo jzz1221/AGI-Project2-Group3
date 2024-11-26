@@ -108,7 +108,7 @@ public class CanvasFollowView : MonoBehaviour
             // Clear the current line
             if (currentLine != null)
             {
-                Destroy(currentLine.gameObject); // Destroy the line's GameObject
+                StartCoroutine(FadeAndDestroyLine(currentLine, 1f));
                 currentLine = null;
             }
 
@@ -129,6 +129,7 @@ public class CanvasFollowView : MonoBehaviour
         drawingPoints.Add(fingerTipPosition);
         currentLine.positionCount = drawingPoints.Count;
         currentLine.SetPositions(drawingPoints.ToArray());
+        if(drawingPoints.Count > 2) Debug.Log("drawing points:"+drawingPoints[1]);
         drawingPointsNumber++;
         if (drawingPointsNumber > 120)
         {
@@ -141,21 +142,6 @@ public class CanvasFollowView : MonoBehaviour
         {
             //clean the first symbol
             //first 50points or?
-        }
-    }
-
-    private void StopDrawing()
-    {
-        if (isDrawing)
-        {
-            isDrawing = false;
-            //currentLine = null;
-
-            // Only proceed if points were drawn
-            // Trigger the OnDrawingFinished event, passing the drawn points
-            OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
-            StartCoroutine(FadeAndDestroyLine(currentLine, 1f));
-            
         }
     }
     
