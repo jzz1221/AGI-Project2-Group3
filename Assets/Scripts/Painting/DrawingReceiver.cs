@@ -7,6 +7,8 @@ using System.IO;
 public class DrawingReceiver : MonoBehaviour
 {
     public CanvasFollowView canvasFollowView; // Must be assigned manually in the Inspector
+    public Material lineMaterial;
+
     private Plane paintingPlane;
     private Transform paintingPlaneTransform;
     private Transform ResultPlaneTransform;
@@ -93,12 +95,29 @@ public class DrawingReceiver : MonoBehaviour
     // Event handler method called when drawing is finished
     private void HandleDrawingFinished(List<Vector3> drawingPoints)
     {
-
         //Render 2D points on Plane(Quad)
         Vector3 planeOrigin = paintingPlaneTransform.position;
         List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
 
-        Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+        // Get the zombie currently being watched
+        ZombieScript targetedZombie = RaycastFromVRCamera.currentTargetZombie;
+        Debug.Log("get zombie in receiver");
+
+        if (targetedZombie != null && targetedZombie.plane != null)
+        {
+            targetedZombie.ActivatePlane();
+            targetedZombie.RemoveZombie();
+            Debug.Log("set zombie plane active");
+            Transform zombiePlaneTransform = targetedZombie.plane.transform;
+
+            // Render the drawn shape on the zombie's plane
+            Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
+        }
+        else
+        {
+            // If there is no zombie being looked at, render to the default result plane
+            Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+        }
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)
@@ -137,7 +156,7 @@ public class DrawingReceiver : MonoBehaviour
 
         // 添加 LineRenderer 组件
         LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 设置默认材质
+        lineRenderer.material = lineMaterial;
         lineRenderer.startWidth = 0.01f; // 线宽
         lineRenderer.endWidth = 0.01f;
         lineRenderer.material.color = Color.white;
