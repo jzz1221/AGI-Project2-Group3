@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class RaycastFromVRCamera : MonoBehaviour
 {
-       public Transform vrCamera; // The Transform of the VR camera; should be assigned in the Inspector
+    public Transform vrCamera; // The Transform of the VR camera; should be assigned in the Inspector
     public float maxRayDistance = 100.0f; // The maximum distance for the raycast
     public LayerMask raycastLayerMask; // Layer mask to specify which layers the raycast should detect
+    public static ZombieScript currentTargetZombie = null;
 
     private GameObject lastHitObject = null; // Stores the last object hit by the ray
     private Color originalColor; // Stores the original color of the last hit object
@@ -24,8 +25,19 @@ public class RaycastFromVRCamera : MonoBehaviour
         if (Physics.Raycast(origin, direction, out RaycastHit hit, maxRayDistance, raycastLayerMask))
         {
             GameObject hitObject = hit.collider.gameObject; // The object currently hit by the ray
+            Debug.Log("Raycast hit object: " + hitObject.name);
 
-            // If the ray hits a different object
+            ZombieScript zombieScript = hitObject.GetComponentInParent<ZombieScript>();
+            if (zombieScript != null)
+            {
+                currentTargetZombie = zombieScript;
+                Debug.Log("Current Target Zombie: " + currentTargetZombie);
+            }
+            else
+            {
+                currentTargetZombie = null;
+            }
+
             if (hitObject != lastHitObject)
             {
                 // Restore the color of the last hit object
@@ -39,7 +51,7 @@ public class RaycastFromVRCamera : MonoBehaviour
                 if (renderer != null)
                 {
                     originalColor = renderer.material.color; // Save the original color
-                    renderer.material.color = Color.yellow; // Change the color to red
+                    renderer.material.color = Color.yellow; // Change the color to yellow
                 }
             }
         }
@@ -48,6 +60,7 @@ public class RaycastFromVRCamera : MonoBehaviour
             // If the ray does not hit any object, restore the last hit object's color
             ResetLastHitObjectColor();
             lastHitObject = null; // Clear the record of the last hit object
+            currentTargetZombie = null;
         }
     }
 

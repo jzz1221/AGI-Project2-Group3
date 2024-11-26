@@ -9,9 +9,20 @@ public class ZombieScript : MonoBehaviour
     private GameObject spawner;
     private bool active;
 
+    public GameObject plane;
+
+    public Transform zombieTransform;
+
     void Start()
     {
         active = true;
+
+        plane.SetActive(false);
+        if (zombieTransform != null && player != null)
+        {
+            zombieTransform.LookAt(player.transform);
+            zombieTransform.Rotate(0, 180, 0);
+        }
     }
 
     void Update()
@@ -19,10 +30,15 @@ public class ZombieScript : MonoBehaviour
         if(active) {
             AttackPlayer();
         }
+
     }
 
     void AttackPlayer() {
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed*Time.deltaTime);
+    }
+    public void ActivatePlane()
+    {
+        plane.SetActive(true);
     }
 
     public void SetPlayer(GameObject p) {
