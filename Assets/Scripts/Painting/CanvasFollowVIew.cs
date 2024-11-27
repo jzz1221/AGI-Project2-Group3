@@ -122,29 +122,29 @@ public class CanvasFollowView : MonoBehaviour
         }
     }
 
-    //private void StopDrawing()
-    //{
-    //    if (isDrawing)
-    //    {
-    //        isDrawing = false;
+    private void StopDrawing()
+    {
+        if (isDrawing)
+        {
+            isDrawing = false;
 
-    //        // Only proceed if points were drawn
-    //        if (drawingPoints.Count > 2)
-    //        {
-    //            // Trigger the OnDrawingFinished event, passing the drawn points
-    //            OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
-    //        }
+            // Only proceed if points were drawn
+            if (drawingPoints.Count > 2)
+            {
+                // Trigger the OnDrawingFinished event, passing the drawn points
+                OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+            }
 
-    //        // Clear the current line
-    //        if (currentLine != null)
-    //        {
-    //            Destroy(currentLine.gameObject); // Destroy the line's GameObject
-    //            currentLine = null;
-    //        }
+            // Clear the current line
+            if (currentLine != null)
+            {
+                Destroy(currentLine.gameObject); // Destroy the line's GameObject
+                currentLine = null;
+            }
 
-    //        drawingPoints.Clear(); // Clear the drawing points list
-    //    }
-    //}
+            drawingPoints.Clear(); // Clear the drawing points list
+        }
+    }
 
     private void Draw()
     {
@@ -174,21 +174,22 @@ public class CanvasFollowView : MonoBehaviour
         }
     }
 
-    private void StopDrawing()
-    {
-        if (isDrawing)
-        {
-            isDrawing = false;
-            //currentLine = null;
+    //private void StopDrawing()
+    //{
+    //    if (isDrawing)
+    //    {
+    //        isDrawing = false;
+    //        //currentLine = null;
 
-            // Only proceed if points were drawn
-            // Trigger the OnDrawingFinished event, passing the drawn points
-            OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
-            StartCoroutine(FadeAndDestroyLine(currentLine, 1f));
+    //        // Only proceed if points were drawn
+    //        // Trigger the OnDrawingFinished event, passing the drawn points
+    //        OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+    //        StartCoroutine(FadeAndDestroyLine(currentLine, 1f));
             
-        }
-    }
-    
+    //    }
+    //    currentLine = null;
+    //}
+
     private IEnumerator TriggerDrawingFinishedAsync(List<Vector3> points)
     {
         yield return null;
