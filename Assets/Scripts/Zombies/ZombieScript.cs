@@ -68,7 +68,7 @@ public class ZombieScript : MonoBehaviour
     {
         spawner.GetComponent<ZombieSpawnerScript>().UpdateZombiesLeft();
         plane.GetComponent<Renderer>().material.color = Color.yellow;
-        Audio.GetComponent<AudioTrigger>().StopAudio();
+        Destroy(Audio);
         active = false;
         isRemoved = true; // Mark the zombie as removed
         StartCoroutine(DestroyZombie());
