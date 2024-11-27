@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
-using System; // Import System namespace to use Action
+using System; // 引入 System 命名空间以使用 Action
 using TMPro;
 
 public class CanvasFollowView : MonoBehaviour
@@ -25,7 +25,7 @@ public class CanvasFollowView : MonoBehaviour
     private bool canvasLocked = false;
 
     private Coroutine unlockCanvasCoroutine; // Stores the coroutine for unlocking the canvas
-    
+
     public Plane paintingPlane;
     public Transform paintingPlaneTransform;
     public Transform reslutPlaneTransform;
@@ -43,6 +43,35 @@ public class CanvasFollowView : MonoBehaviour
     void Start()
     {
         paintingPlane = new Plane(paintingPlaneTransform.up, paintingPlaneTransform.position);
+
+        // 初始时禁用画布
+        gameObject.SetActive(false);
+
+        // 订阅骨骼初始化完成的事件
+        if (gestureRecognizer != null)
+        {
+            gestureRecognizer.OnBonesInitialized += HandleBonesInitialized;
+        }
+        else
+        {
+            Debug.LogError("GestureRecognizer is not assigned.");
+        }
+    }
+
+    void OnDestroy()
+    {
+        // 取消订阅事件
+        if (gestureRecognizer != null)
+        {
+            gestureRecognizer.OnBonesInitialized -= HandleBonesInitialized;
+        }
+    }
+
+    private void HandleBonesInitialized()
+    {
+        // 激活画布
+        gameObject.SetActive(true);
+        Debug.Log("Canvas is now active.");
     }
 
     void Update()
@@ -66,9 +95,10 @@ public class CanvasFollowView : MonoBehaviour
                 }
             }
         }
-        if(currentLine== null) isLine = false;
+        if (currentLine == null) isLine = false;
         else isLine = true;
-        IsDrawing.text = "paintingmode?" + PaintingMode + "IsDrawing?" + isDrawing + "line" + isLine;
+        if (IsDrawing != null)
+            IsDrawing.text = "paintingmode?" + PaintingMode + "IsDrawing?" + isDrawing + "line" + isLine;
     }
 
     private void StartDrawing()
@@ -92,29 +122,29 @@ public class CanvasFollowView : MonoBehaviour
         }
     }
 
-    private void StopDrawing()
-    {
-        if (isDrawing)
-        {
-            isDrawing = false;
+    //private void StopDrawing()
+    //{
+    //    if (isDrawing)
+    //    {
+    //        isDrawing = false;
 
-            // Only proceed if points were drawn
-            if (drawingPoints.Count > 2)
-            {
-                // Trigger the OnDrawingFinished event, passing the drawn points
-                OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
-            }
+    //        // Only proceed if points were drawn
+    //        if (drawingPoints.Count > 2)
+    //        {
+    //            // Trigger the OnDrawingFinished event, passing the drawn points
+    //            OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+    //        }
 
-            // Clear the current line
-            if (currentLine != null)
-            {
-                Destroy(currentLine.gameObject); // Destroy the line's GameObject
-                currentLine = null;
-            }
+    //        // Clear the current line
+    //        if (currentLine != null)
+    //        {
+    //            Destroy(currentLine.gameObject); // Destroy the line's GameObject
+    //            currentLine = null;
+    //        }
 
-            drawingPoints.Clear(); // Clear the drawing points list
-        }
-    }
+    //        drawingPoints.Clear(); // Clear the drawing points list
+    //    }
+    //}
 
     private void Draw()
     {
