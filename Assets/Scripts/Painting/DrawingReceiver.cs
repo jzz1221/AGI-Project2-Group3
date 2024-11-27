@@ -14,6 +14,8 @@ public class DrawingReceiver : MonoBehaviour
     private Transform ResultPlaneTransform;
     private List<Point> points = new List<Point>();
     private List<Gesture> trainingSet = new List<Gesture>();
+    
+    private Result result;
 
     void Start()
     {
@@ -74,6 +76,7 @@ public class DrawingReceiver : MonoBehaviour
 
         Gesture candidate = new Gesture(points.ToArray());
         Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
+        result = gestureResult;
 
         string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
         canvasFollowView.UpdateResultText(resultOutput);
@@ -84,12 +87,12 @@ public class DrawingReceiver : MonoBehaviour
         
             // Change line material
             Material newMaterial = new Material(Shader.Find("Sprites/Default"));
-            newMaterial.color = Color.blue; // Example: Change the color to blue
+            newMaterial.color = Color.yellow; // Example: Change the color to blue
             canvasFollowView.UpdateLineMaterial(newMaterial);
-
             // Clear previous line
             //canvasFollowView.ClearPreviousLine();
         }
+        
     }
 
     // Event handler method called when drawing is finished
@@ -106,17 +109,21 @@ public class DrawingReceiver : MonoBehaviour
         if (targetedZombie != null && targetedZombie.plane != null)
         {
             targetedZombie.ActivatePlane();
-            targetedZombie.RemoveZombie();
-            Debug.Log("set zombie plane active");
-            Transform zombiePlaneTransform = targetedZombie.plane.transform;
+            if(result.GestureClass == "D" && result.Score >= 0.6f)
+            {
+                targetedZombie.RemoveZombie();
+                Debug.Log("set zombie plane active");
+                Transform zombiePlaneTransform = targetedZombie.plane.transform;
 
-            // Render the drawn shape on the zombie's plane
-            Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
+                // Render the drawn shape on the zombie's plane
+                //Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
+                Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+            }
         }
         else
         {
             // If there is no zombie being looked at, render to the default result plane
-            Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+            //Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
         }
     }
 
@@ -179,6 +186,8 @@ public class DrawingReceiver : MonoBehaviour
         lineObj.transform.position = projectedPointsTransform.position;
         lineObj.transform.localScale = projectedPointsTransform.localScale;
         
+        StartCoroutine(FadeAndDestroyLine(lineRenderer, 1f));
+        
         Debug.Log("2D Points Rendered on Plane without closure.");
     }
     
@@ -228,6 +237,30 @@ public class DrawingReceiver : MonoBehaviour
         scaledImageTransform.localPosition -= new Vector3(offset.x * scaleFactor, 0, offset.y * scaleFactor);*/
 
         return scaledImageTransform;
+    }
+    
+    private IEnumerator FadeAndDestroyLine(LineRenderer line, float fadeDuration)
+    {
+        if (line == null) yield break;
+
+        Material lineMaterial = line.material;
+        Color startColor = lineMaterial.color;
+
+        float elapsedTime = 0f;
+        // Gradually reduce the Alpha value
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration); // Linearly interpolate Alpha from 1 to 0
+            lineMaterial.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            yield return null;
+        }
+
+        // Ensure the line is fully invisible
+        lineMaterial.color = new Color(startColor.r, startColor.g, startColor.b, 0);
+
+        // Destroy the line GameObject
+        if(line.gameObject != null) Destroy(line.gameObject);
     }
     
 }

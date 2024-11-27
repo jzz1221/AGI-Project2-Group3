@@ -21,6 +21,8 @@ public class CanvasFollowView : MonoBehaviour
     private List<Vector3> drawingPoints = new List<Vector3>();
     private int drawingPointsNumber = 0;
 
+    private List<GameObject> LineRendererObjects = new List<GameObject>();
+
     private bool isDrawing = false;
     private bool canvasLocked = false;
 
@@ -68,7 +70,7 @@ public class CanvasFollowView : MonoBehaviour
         }
         if(currentLine== null) isLine = false;
         else isLine = true;
-        IsDrawing.text = "paintingmode?" + PaintingMode + "IsDrawing?" + isDrawing + "line" + isLine;
+        //IsDrawing.text = "paintingmode?" + PaintingMode + "IsDrawing?" + isDrawing + "line" + isLine;
     }
 
     private void StartDrawing()
@@ -89,6 +91,7 @@ public class CanvasFollowView : MonoBehaviour
             currentLine.endWidth = lineWidth;
             currentLine.material.color = Color.white;
             currentLine.positionCount = 0;
+            LineRendererObjects.Add(lineObj);
         }
     }
 
@@ -103,6 +106,7 @@ public class CanvasFollowView : MonoBehaviour
             {
                 // Trigger the OnDrawingFinished event, passing the drawn points
                 OnDrawingFinished?.Invoke(new List<Vector3>(drawingPoints));
+                DestroyAllLines();
             }
 
             // Clear the current line
@@ -189,7 +193,7 @@ public class CanvasFollowView : MonoBehaviour
         lineMaterial.color = new Color(startColor.r, startColor.g, startColor.b, 0);
 
         // Destroy the line GameObject
-        Destroy(line.gameObject);
+        //if(line.gameObject != null) Destroy(line.gameObject);
         currentLine = null;
 
     }
@@ -207,6 +211,20 @@ public class CanvasFollowView : MonoBehaviour
         drawingPoints.Clear();
         drawingPointsNumber = 0;
         Debug.Log("Cleared previous line and points.");
+    }
+    
+    private void DestroyAllLines()
+    {
+        foreach (GameObject lineObj in LineRendererObjects)
+        {
+            // Destroy each line object
+            Destroy(lineObj);
+        }
+
+        // Clear the list
+        LineRendererObjects.Clear();
+
+        Debug.Log("All line objects destroyed.");
     }
     
     public void UpdateResultText(string result)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Oculus.Interaction;
 using UnityEngine;
 
 public class ZombieScript : MonoBehaviour
@@ -13,11 +14,14 @@ public class ZombieScript : MonoBehaviour
     public GameObject plane;
 
     public Transform zombieTransform;
+    public GameObject Audio;
 
     void Start()
     {
         active = true;
         isRemoved = false;
+
+        Audio.GetComponent<AudioTrigger>().PlayAudio();
 
         plane.SetActive(false);
         if (zombieTransform != null && player != null)
@@ -63,6 +67,8 @@ public class ZombieScript : MonoBehaviour
     public void RemoveZombie()
     {
         spawner.GetComponent<ZombieSpawnerScript>().UpdateZombiesLeft();
+        plane.GetComponent<Renderer>().material.color = Color.yellow;
+        Audio.GetComponent<AudioTrigger>().StopAudio();
         active = false;
         isRemoved = true; // Mark the zombie as removed
         StartCoroutine(DestroyZombie());
