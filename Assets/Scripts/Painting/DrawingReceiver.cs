@@ -109,7 +109,7 @@ public class DrawingReceiver : MonoBehaviour
         if (targetedZombie != null && targetedZombie.plane != null)
         {
             targetedZombie.ActivatePlane();
-            if(result.GestureClass == "D" && result.Score >= 0.6f)
+            if(result.GestureClass == "D" && result.Score >= 0.5f)
             {
                 targetedZombie.RemoveZombie();
                 Debug.Log("set zombie plane active");
@@ -117,7 +117,7 @@ public class DrawingReceiver : MonoBehaviour
 
                 // Render the drawn shape on the zombie's plane
                 //Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
-                Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+                
             }
         }
         else
@@ -125,6 +125,7 @@ public class DrawingReceiver : MonoBehaviour
             // If there is no zombie being looked at, render to the default result plane
             //Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
         }
+        Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)

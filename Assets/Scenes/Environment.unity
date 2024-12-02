@@ -142578,9 +142578,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieAmount: 100
-  radius: 10
+  radius: 8
   delay: 7
-  zombieSpeed: 0.2
+  zombieSpeed: 0.1
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}
   player: {fileID: 798877380}
 --- !u!4 &2133247194
