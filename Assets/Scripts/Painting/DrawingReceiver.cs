@@ -105,15 +105,18 @@ public class DrawingReceiver : MonoBehaviour
         // Get the zombie currently being watched
         ZombieScript targetedZombie = RaycastFromVRCamera.currentTargetZombie;
         Debug.Log("get zombie in receiver");
-
+        
         if (targetedZombie != null && targetedZombie.plane != null)
         {
             targetedZombie.ActivatePlane();
+            GameObject targetedZombieGO = targetedZombie.plane.gameObject;
+            GameObject ProjectedPointsGO = Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
             if(result.GestureClass == "D" && result.Score >= 0.5f)
             {
+                RenderGestureToZombie(ProjectedPointsGO, targetedZombieGO);
                 targetedZombie.RemoveZombie();
                 Debug.Log("set zombie plane active");
-                Transform zombiePlaneTransform = targetedZombie.plane.transform;
+                //Transform zombiePlaneTransform = targetedZombie.plane.transform;
 
                 // Render the drawn shape on the zombie's plane
                 //Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
@@ -125,7 +128,7 @@ public class DrawingReceiver : MonoBehaviour
             // If there is no zombie being looked at, render to the default result plane
             //Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
         }
-        Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+        
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)
@@ -156,18 +159,19 @@ public class DrawingReceiver : MonoBehaviour
     }
     
     
-    private void Render2DPointsOnPlane(List<Vector2> projectedPoints, Transform paintingPlane)
+    private GameObject Render2DPointsOnPlane(List<Vector2> projectedPoints, Transform paintingPlane)
     {
         // 创建一个新的 GameObject，用于存放 LineRenderer
         GameObject lineObj = new GameObject("ProjectedShape");
         lineObj.transform.SetParent(paintingPlane, false);
+        Mesh mesh = lineObj.AddComponent<MeshFilter>().mesh;
 
         // 添加 LineRenderer 组件
         LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
         lineRenderer.material = lineMaterial;
         lineRenderer.startWidth = 0.01f; // 线宽
         lineRenderer.endWidth = 0.01f;
-        lineRenderer.material.color = Color.white;
+        lineRenderer.material.color = Color.black;
         lineRenderer.positionCount = projectedPoints.Count; // 顶点数量与点的数量相同，不再加 1
         
         lineRenderer.useWorldSpace = false;
@@ -181,63 +185,42 @@ public class DrawingReceiver : MonoBehaviour
             Vector3 point3D = new Vector3(point2D.x, point2D.y, 0);
             lineRenderer.SetPosition(i, point3D);
         }
-        Transform projectedPointsTransform = lineObj.transform;
+        
+        /*Transform projectedPointsTransform = lineObj.transform;
         projectedPointsTransform = CreateTransformForScaledImage(projectedPoints, paintingPlane);
         
         lineObj.transform.position = projectedPointsTransform.position;
-        lineObj.transform.localScale = projectedPointsTransform.localScale;
+        lineObj.transform.localScale = projectedPointsTransform.localScale;*/
         
-        StartCoroutine(FadeAndDestroyLine(lineRenderer, 1f));
+        //StartCoroutine(FadeAndDestroyLine(lineRenderer, 1f));
         
         Debug.Log("2D Points Rendered on Plane without closure.");
+        return lineObj;
     }
-    
-    public Transform CreateTransformForScaledImage(List<Vector2> originalPoints, Transform targetPlane)
-    {
-        // Calculate original bounding box
-        float minX = float.MaxValue, maxX = float.MinValue;
-        float minY = float.MaxValue, maxY = float.MinValue;
 
-        foreach (Vector2 point in originalPoints)
+    private void RenderGestureToZombie(GameObject originalObject, GameObject parentPlane)
+    {
+        if (originalObject == null || parentPlane == null)
         {
-            minX = Mathf.Min(minX, point.x);
-            maxX = Mathf.Max(maxX, point.x);
-            minY = Mathf.Min(minY, point.y);
-            maxY = Mathf.Max(maxY, point.y);
+            Debug.LogError("Original object or parent plane is null. Please ensure both are assigned.");
+            return;
         }
 
-        float originalWidth = maxX - minX;
-        float originalHeight = maxY - minY;
+        // Step 1: Create a duplicate of the original object
+        GameObject duplicatedObject = Instantiate(originalObject);
 
-        // Calculate original image center
-        Vector2 originalCenter = new Vector2(minX + originalWidth / 2, minY + originalHeight / 2);
+        // Step 2: Attach the duplicated object to the parentPlane as a child
+        duplicatedObject.transform.SetParent(parentPlane.transform, true);
 
-        // Create a new GameObject to represent the Transform of the scaled image
-        GameObject scaledImageObject = new GameObject("ScaledImageTransform");
-        Transform scaledImageTransform = scaledImageObject.transform;
+        // Step 3: Modify the properties of the duplicated object
+        duplicatedObject.transform.localPosition = Vector3.zero; // Set position to zero
+        duplicatedObject.transform.localRotation = Quaternion.Euler(-90, 90, -90); // Set rotation
 
-        // Set the scaledImageTransform's parent to the targetPlane
-        scaledImageTransform.SetParent(targetPlane, false);
+        float objX = originalObject.transform.localScale.x;
+        float objY = originalObject.transform.localScale.y;
+        float objZ = originalObject.transform.localScale.z;
+        duplicatedObject.transform.localScale.Set((objX*3), (objY*3), (objZ*3));
 
-        // Align scaledImageTransform to targetPlane's center
-        scaledImageTransform.localPosition = new Vector3(originalCenter.x, 0, originalCenter.y);
-
-        /*// Calculate target plane dimensions
-        Vector3 targetWorldScale = targetPlane.lossyScale;
-        float targetWidth = targetWorldScale.x; // Width in world space
-        float targetHeight = targetWorldScale.z; // Height in world space (assuming X-Z alignment)
-
-        // Calculate scaling factor to maintain aspect ratio
-        float scaleFactor = Mathf.Min(targetWidth / originalWidth, targetHeight / originalHeight);
-
-        // Apply scale to the Transform
-        scaledImageTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1f); // Uniform scaling
-
-        // Offset scaledImageTransform's local position to align original center with targetPlane's center
-        Vector2 offset = originalCenter - Vector2.zero; // Calculate how far the original is offset from (0, 0)
-        scaledImageTransform.localPosition -= new Vector3(offset.x * scaleFactor, 0, offset.y * scaleFactor);*/
-
-        return scaledImageTransform;
     }
     
     private IEnumerator FadeAndDestroyLine(LineRenderer line, float fadeDuration)
