@@ -1418,6 +1418,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 5072668890327691088, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 7483709506392700441, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1431,7 +1436,7 @@ PrefabInstance:
     - target: {fileID: 7483709506392700441, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.84
+      value: 2.89
       objectReference: {fileID: 0}
     - target: {fileID: 7483709506392700441, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
@@ -1697,12 +1702,15 @@ MonoBehaviour:
   gestureRecognizer: {fileID: 652594568}
   distance: 0.42
   offset: {x: 0, y: 0, z: 0}
-  lineMaterial: {fileID: 2100000, guid: f5ccd52dc494e054fbe7d7161dcabe25, type: 2}
+  lineMaterial: {fileID: 2100000, guid: e150928833b6b6e46af05bd8cd2747bf, type: 2}
+  SucceedMaterial: {fileID: 2100000, guid: d9d0b12c0ca382c46b29ec8aa55c8437, type: 2}
   lineWidth: 0.01
   minDistanceThreshold: 0.001
   PaintingMode: 0
+  drawingReceiver: {fileID: 652594569}
   paintingPlaneTransform: {fileID: 359092752}
   reslutPlaneTransform: {fileID: 1183307296}
+  minMatchingScore: 0.8
   PointTextforDebug: {fileID: 80539279}
   ResultText: {fileID: 1816551939}
   IsDrawing: {fileID: 1929393178}
@@ -2091,7 +2099,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &647570799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2202,7 +2210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasFollowView: {fileID: 525759474}
-  lineMaterial: {fileID: 0}
 --- !u!1 &653263828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4252,7 +4259,7 @@ MonoBehaviour:
   fieldOfViewAngle: 30
   zombieLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!4 &1273026899
 Transform:
   m_ObjectHideFlags: 0

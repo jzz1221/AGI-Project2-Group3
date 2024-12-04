@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDollarGestureRecognizer;
 using System.IO;
+using System;
 
 public class DrawingReceiver : MonoBehaviour
 {
     public CanvasFollowView canvasFollowView; // Must be assigned manually in the Inspector
-    public Material lineMaterial;
+    private Material defultMaterial;
+    private float defaultLineWidth;
 
     private Plane paintingPlane;
     private Transform paintingPlaneTransform;
@@ -16,9 +18,16 @@ public class DrawingReceiver : MonoBehaviour
     private List<Gesture> trainingSet = new List<Gesture>();
     
     private Result result;
+    private List<Result> results = new List<Result>();
+    
+    public event Action<string, float> OnSymbolMatchingResult;
 
     void Start()
     {
+        defultMaterial = canvasFollowView.lineMaterial;
+        defaultLineWidth = canvasFollowView.lineWidth;
+        StrokeManager.Instance.Initialize(defultMaterial, defaultLineWidth);
+        
         //Load pre-made gestures
         TextAsset[] gesturesXml = Resources.LoadAll<TextAsset>("GestureSet/10-stylus-MEDIUM/");
         foreach (TextAsset gestureXml in gesturesXml)
@@ -62,7 +71,7 @@ public class DrawingReceiver : MonoBehaviour
     }
 
     // Event handler method called when drawing is finished
-    private void HandleMatchingRequestedl(List<Vector3> drawingPoints)
+    private void HandleMatchingRequestedl(List<Vector3> drawingPoints, GameObject LineObject)
     {
         Debug.Log("Processing gesture matching...");
         Vector3 planeOrigin = paintingPlaneTransform.position;
@@ -77,58 +86,62 @@ public class DrawingReceiver : MonoBehaviour
         Gesture candidate = new Gesture(points.ToArray());
         Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
         result = gestureResult;
+        results.Add(result);
+        OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
 
         string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
         canvasFollowView.UpdateResultText(resultOutput);
-        
-        if (gestureResult.Score >= 0.8f)
-        {
-            Debug.Log("High confidence detected! Updating material and clearing line.");
-        
-            // Change line material
-            Material newMaterial = new Material(Shader.Find("Sprites/Default"));
-            newMaterial.color = Color.yellow; // Example: Change the color to blue
-            canvasFollowView.UpdateLineMaterial(newMaterial);
-            // Clear previous line
-            //canvasFollowView.ClearPreviousLine();
-        }
-        
     }
-
-    // Event handler method called when drawing is finished
-    private void HandleDrawingFinished(List<Vector3> drawingPoints)
+    
+    //new function for drawing finished
+    private void HandleDrawingFinished(List<Vector3> drawingPoints, GameObject LineObject)
     {
-        //Render 2D points on Plane(Quad)
-        Vector3 planeOrigin = paintingPlaneTransform.position;
-        List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
+        HandleMatchingRequestedl(drawingPoints, LineObject);
+        // Define the group ID to process
+        string groupId = "DrawingLine Recognized"; 
+        // Get all strokes in the group
+        List<LineRenderer> succeedgroupStrokes = StrokeManager.Instance.GetLineRenderersInGroup(groupId);
 
-        // Get the zombie currently being watched
+        // Collect all 3D points from the strokes in the group
+        List<Vector3> allGroupPoints = new List<Vector3>();
+        foreach (LineRenderer lineRenderer in succeedgroupStrokes)
+        {
+            Vector3[] points = new Vector3[lineRenderer.positionCount];
+            lineRenderer.GetPositions(points);
+            allGroupPoints.AddRange(points);
+        }
+
+        // Calculate the plane's origin
+        Vector3 planeOrigin = paintingPlaneTransform.position;
+
+        // Project all collected points onto the plane
+        List<Vector2> projectedPoints = ProjectPointsToPlane(allGroupPoints, planeOrigin);
+
+        // Handle the projected points (e.g., render, gesture detection, or zombie interaction)
         ZombieScript targetedZombie = RaycastFromVRCamera.currentTargetZombie;
         Debug.Log("get zombie in receiver");
-        
+
         if (targetedZombie != null && targetedZombie.plane != null)
         {
             targetedZombie.ActivatePlane();
             GameObject targetedZombieGO = targetedZombie.plane.gameObject;
             GameObject ProjectedPointsGO = Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
-            if(result.GestureClass == "D" && result.Score >= 0.5f)
-            {
-                RenderGestureToZombie(ProjectedPointsGO, targetedZombieGO);
-                targetedZombie.RemoveZombie();
-                Debug.Log("set zombie plane active");
-                //Transform zombiePlaneTransform = targetedZombie.plane.transform;
+            RenderGestureToZombie(ProjectedPointsGO, targetedZombieGO);
 
-                // Render the drawn shape on the zombie's plane
-                //Render2DPointsOnPlane(projectedPoints, zombiePlaneTransform);
-                
+            // Example condition: if gesture matches "D" and score is high enough
+            if (result.GestureClass == "D" && result.Score >= 0.8)
+            {
+                targetedZombie.RemoveZombie();
+                Debug.Log("Zombie removed.");
             }
         }
         else
         {
-            // If there is no zombie being looked at, render to the default result plane
-            //Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
+            Debug.Log("No targeted zombie. Handling projected points differently.");
+            Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
         }
-        
+        //clear all Recognized lines
+        StrokeManager.Instance.ClearGroup(groupId, 1.5f);
     }
 
     // Example method: Generate an image from drawing points (to be implemented as needed)
@@ -145,7 +158,7 @@ public class DrawingReceiver : MonoBehaviour
         return projectedPoints;
     }
     
-    Vector2 ProjectPointToPlane(Vector3 point, Vector3 planeOrigin)
+    Vector3 ProjectPointToPlane(Vector3 point, Vector3 planeOrigin)
     {
         // project the point on a plane
         Vector3 planePoint = paintingPlane.ClosestPointOnPlane(point);
@@ -158,23 +171,10 @@ public class DrawingReceiver : MonoBehaviour
         return projectedPoint;
     }
     
-    
     private GameObject Render2DPointsOnPlane(List<Vector2> projectedPoints, Transform paintingPlane)
     {
-        // 创建一个新的 GameObject，用于存放 LineRenderer
-        GameObject lineObj = new GameObject("ProjectedShape");
-        lineObj.transform.SetParent(paintingPlane, false);
-        Mesh mesh = lineObj.AddComponent<MeshFilter>().mesh;
-
-        // 添加 LineRenderer 组件
-        LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-        lineRenderer.material = lineMaterial;
-        lineRenderer.startWidth = 0.01f; // 线宽
-        lineRenderer.endWidth = 0.01f;
-        lineRenderer.material.color = Color.black;
-        lineRenderer.positionCount = projectedPoints.Count; // 顶点数量与点的数量相同，不再加 1
-        
-        lineRenderer.useWorldSpace = false;
+        LineRenderer projectedline = StrokeManager.Instance.StartStroke(paintingPlane, false, "projected lines");
+        GameObject lineObj = projectedline.gameObject;
 
         // 将 2D 点映射到 3D 世界坐标，并设置到 LineRenderer
         for (int i = 0; i < projectedPoints.Count; i++)
@@ -183,18 +183,13 @@ public class DrawingReceiver : MonoBehaviour
 
             // 将 2D 点转换为 3D 点 (X, Y 平面)，并设置为平面 Transform 的本地坐标
             Vector3 point3D = new Vector3(point2D.x, point2D.y, 0);
-            lineRenderer.SetPosition(i, point3D);
+            //lineRenderer.SetPosition(i, point3D);
+            StrokeManager.Instance.SetStrokePoint(projectedline, point3D);
         }
         
-        /*Transform projectedPointsTransform = lineObj.transform;
-        projectedPointsTransform = CreateTransformForScaledImage(projectedPoints, paintingPlane);
+        lineObj.transform.localScale.Set(3f,3f,3f);
+        StrokeManager.Instance.ClearGroup("projected lines", 1f);
         
-        lineObj.transform.position = projectedPointsTransform.position;
-        lineObj.transform.localScale = projectedPointsTransform.localScale;*/
-        
-        //StartCoroutine(FadeAndDestroyLine(lineRenderer, 1f));
-        
-        Debug.Log("2D Points Rendered on Plane without closure.");
         return lineObj;
     }
 
@@ -222,30 +217,5 @@ public class DrawingReceiver : MonoBehaviour
         duplicatedObject.transform.localScale.Set((objX*3), (objY*3), (objZ*3));
 
     }
-    
-    private IEnumerator FadeAndDestroyLine(LineRenderer line, float fadeDuration)
-    {
-        if (line == null) yield break;
-
-        Material lineMaterial = line.material;
-        Color startColor = lineMaterial.color;
-
-        float elapsedTime = 0f;
-        // Gradually reduce the Alpha value
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration); // Linearly interpolate Alpha from 1 to 0
-            lineMaterial.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-            yield return null;
-        }
-
-        // Ensure the line is fully invisible
-        lineMaterial.color = new Color(startColor.r, startColor.g, startColor.b, 0);
-
-        // Destroy the line GameObject
-        if(line.gameObject != null) Destroy(line.gameObject);
-    }
-    
 }
 
