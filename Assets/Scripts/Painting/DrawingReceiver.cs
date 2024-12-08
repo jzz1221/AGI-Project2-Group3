@@ -19,6 +19,7 @@ public class DrawingReceiver : MonoBehaviour
     
     private Result result;
     private List<Result> results = new List<Result>();
+    private float minMatchingScore;
     
     public event Action<string, float> OnSymbolMatchingResult;
 
@@ -47,6 +48,8 @@ public class DrawingReceiver : MonoBehaviour
         paintingPlane = canvasFollowView.paintingPlane;
         ResultPlaneTransform = canvasFollowView.reslutPlaneTransform;
         paintingPlaneTransform = canvasFollowView.paintingPlaneTransform;
+        
+        minMatchingScore = canvasFollowView.minMatchingScore;
         
         if (canvasFollowView != null)
         {
@@ -114,7 +117,7 @@ public class DrawingReceiver : MonoBehaviour
             Gesture candidate = new Gesture(points.ToArray());
             Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
             result = gestureResult;
-            results.Add(result);
+            if (result.Score>minMatchingScore) results.Add(result);
             OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
             string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
             canvasFollowView.UpdateResultText(resultOutput);

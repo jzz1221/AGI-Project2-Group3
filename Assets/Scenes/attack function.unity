@@ -1423,6 +1423,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d0fe170bea4fb0a43849bba590ddcbad, type: 2}
+    - target: {fileID: 6168325283716448765, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: _audioClips.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7060811538931481594, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
       propertyPath: m_Enabled
@@ -2118,9 +2123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieAmount: 10
-  radius: 12
-  delay: 7
-  zombieSpeed: 0.5
+  radius: 10
+  delay: 11
+  zombieSpeed: 0.3
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}
   player: {fileID: 746639686}
 --- !u!4 &647570800
@@ -3798,7 +3803,7 @@ PrefabInstance:
     - target: {fileID: 5771626229051275134, guid: 3cf72b253ec1d4245b8e921a2becc6d9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.04
+      value: -1.72
       objectReference: {fileID: 0}
     - target: {fileID: 5771626229051275134, guid: 3cf72b253ec1d4245b8e921a2becc6d9,
         type: 3}
