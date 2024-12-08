@@ -169,44 +169,6 @@ public class StrokeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Clears all points in a specific stroke.
-    /// </summary>
-    /// <param name="lineRenderer">The LineRenderer to clear.</param>
-    public void ClearStroke(LineRenderer lineRenderer)
-    {
-        if (lineRenderer != null)
-        {
-            lineRenderer.positionCount = 0;
-        }
-    }
-
-    /// <summary>
-    /// Deletes a specific stroke by index.
-    /// </summary>
-    /// <param name="index">The index of the stroke to delete.</param>
-    public void DeleteStroke(int index)
-    {
-        if (index < 0 || index >= strokes.Count) return;
-
-        GameObject strokeObj = strokes[index];
-        strokes.RemoveAt(index);
-        GameObject.Destroy(strokeObj);
-    }
-
-    /// <summary>
-    /// Clears all strokes globally.
-    /// </summary>
-    public void ClearAllStrokes()
-    {
-        foreach (GameObject stroke in strokes)
-        {
-            GameObject.Destroy(stroke);
-        }
-        strokes.Clear();
-        strokeGroups.Clear();
-    }
-
-    /// <summary>
     /// Clears all strokes within a specific group, with a fade-out effect.
     /// </summary>
     /// <param name="groupName">The name of the group to clear.</param>
@@ -344,5 +306,43 @@ public class StrokeManager : MonoBehaviour
             }
         }
         return lineRenderers;
+    }
+    
+    /// <summary>
+    /// Clears all points in a specific stroke.
+    /// </summary>
+    /// <param name="lineRenderer">The LineRenderer to clear.</param>
+    public void ClearStroke(LineRenderer lineRenderer)
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 0;
+        }
+    }
+
+    /// <summary>
+    /// Deletes a specific stroke by index.
+    /// </summary>
+    /// <param name="index">The index of the stroke to delete.</param>
+    public void DeleteStroke(int index)
+    {
+        if (index < 0 || index >= strokes.Count) return;
+
+        GameObject strokeObj = strokes[index];
+        strokes.RemoveAt(index);
+        GameObject.Destroy(strokeObj);
+    }
+
+    /// <summary>
+    /// Clears all strokes globally.
+    /// </summary>
+    public void ClearAllStrokes()
+    {
+        foreach (GameObject stroke in strokes)
+        {
+            GameObject.Destroy(stroke);
+        }
+        strokes.Clear();
+        strokeGroups.Clear();
     }
 }

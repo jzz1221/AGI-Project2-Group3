@@ -110,9 +110,11 @@ public class CanvasFollowView : MonoBehaviour
             if (drawingPoints.Count > 2)
             {
                 // Trigger the OnDrawingFinished event, passing the drawn points
-                OnDrawingFinished?.Invoke(drawingPoints,currentLine.gameObject);
+                OnDrawingFinished?.Invoke(drawingPoints, currentLine.gameObject);
             }
-
+            else StrokeManager.Instance.ChangeStrokeGroup
+                    (currentLine.gameObject, "DrawingLine Recognized");
+            
             // Clear the current line
             if (currentLine != null) currentLine = null;
             drawingPointsNumber = 0;

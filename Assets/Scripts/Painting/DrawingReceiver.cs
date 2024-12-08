@@ -74,23 +74,27 @@ public class DrawingReceiver : MonoBehaviour
     private void HandleMatchingRequestedl(List<Vector3> drawingPoints, GameObject LineObject)
     {
         Debug.Log("Processing gesture matching...");
-        Vector3 planeOrigin = paintingPlaneTransform.position;
-        List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
-        
-        points.Clear();
-        foreach (Vector2 p in projectedPoints)
+        if (drawingPoints.Count > 2)
         {
-            points.Add(new Point(p.x, p.y, 1));
+            Vector3 planeOrigin = paintingPlaneTransform.position;
+            List<Vector2> projectedPoints = ProjectPointsToPlane(drawingPoints, planeOrigin);
+
+            points.Clear();
+            foreach (Vector2 p in projectedPoints)
+            {
+                points.Add(new Point(p.x, p.y, 1));
+            }
+
+            Gesture candidate = new Gesture(points.ToArray());
+            Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
+            result = gestureResult;
+            results.Add(result);
+            OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
+
+            string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
+            canvasFollowView.UpdateResultText(resultOutput);
         }
-
-        Gesture candidate = new Gesture(points.ToArray());
-        Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
-        result = gestureResult;
-        results.Add(result);
-        OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
-
-        string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
-        canvasFollowView.UpdateResultText(resultOutput);
+        
     }
     
     //new function for drawing finished
