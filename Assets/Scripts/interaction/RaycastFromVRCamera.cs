@@ -12,6 +12,19 @@ public class RaycastFromVRCamera : MonoBehaviour
 
     private GameObject lastHitObject = null; // Previously detected object
     private Color originalColor; // Original color of the previously detected object
+    
+    private Color pointedcolor;
+    private Color talismancolor;
+    private Color defaultcolor;
+
+    void Start()
+    {
+        talismancolor = Color.yellow;
+        pointedcolor = Color.yellow;
+        defaultcolor = Color.gray;
+        defaultcolor.a = 0;
+        pointedcolor.a = 0.8f;
+    }
 
     void Update()
     {
@@ -40,7 +53,7 @@ public class RaycastFromVRCamera : MonoBehaviour
                 float distance = directionToCollider.magnitude; // Distance to the collider
 
                 // Check if this object is closer than the previously detected one
-                ZombieScript zombieScript = collider.GetComponentInParent<ZombieScript>();
+                ZombieScript zombieScript = collider.GetComponent<ZombieScript>();
                 if (zombieScript != null && !zombieScript.isRemoved) // Skip removed zombies
                 {
                     if (distance < closestDistance)
@@ -61,13 +74,14 @@ public class RaycastFromVRCamera : MonoBehaviour
                 ResetLastHitObjectColor(); // Reset the previous object's color
                 lastHitObject = closestHitObject;
 
-                // Highlight the new closest object
+                closestZombie.transform.Find("Plane").GetComponent<MeshRenderer>().material.color = pointedcolor;
+                /*// Highlight the new closest object
                 Renderer renderer = closestHitObject.GetComponent<Renderer>();
                 if (renderer != null)
                 {
                     originalColor = renderer.material.color;
                     renderer.material.color = Color.yellow; // Change the color to highlight it
-                }
+                }*/
             }
 
             currentTargetZombie = closestZombie; // Update the current target
@@ -86,11 +100,12 @@ public class RaycastFromVRCamera : MonoBehaviour
     {
         if (lastHitObject != null)
         {
-            Renderer renderer = lastHitObject.GetComponent<Renderer>();
+            /*Renderer renderer = lastHitObject.GetComponent<Renderer>();
             if (renderer != null)
             {
                 renderer.material.color = originalColor; // Restore original color
-            }
+            }*/
+            lastHitObject.transform.Find("Plane").GetComponent<MeshRenderer>().material.color = defaultcolor;;
         }
     }
 }

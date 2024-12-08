@@ -1418,15 +1418,40 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5072668890327691088, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: d0fe170bea4fb0a43849bba590ddcbad, type: 2}
-    - target: {fileID: 7060811538931481594, guid: 3584d3332c55442c3ba27b880f4b65b4,
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - target: {fileID: 6168325283716448765, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: _volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168325283716448765, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: _audioClips.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6168325283716448765, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: _audioClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: b072dabc864256f4882b14bbe7d0a933, type: 3}
+    - target: {fileID: 6168325283716448765, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: _audioClips.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c5061fbaccfd5d4e9b6041950f060f9, type: 3}
+    - target: {fileID: 6193514080296068038, guid: 3584d3332c55442c3ba27b880f4b65b4,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7483709506392700441, guid: 3584d3332c55442c3ba27b880f4b65b4,
         type: 3}
@@ -2118,7 +2143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieAmount: 10
-  radius: 12
+  radius: 10
   delay: 7
   zombieSpeed: 0.5
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}

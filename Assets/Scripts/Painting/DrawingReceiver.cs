@@ -69,6 +69,32 @@ public class DrawingReceiver : MonoBehaviour
             canvasFollowView.OnDrawingFinished -= HandleDrawingFinished;
         }
     }
+    
+    public Dictionary<string, int> CountGestureOccurrences()
+    {
+        // 创建一个字典来存储每个 GestureClass 的出现次数
+        Dictionary<string, int> gestureCounts = new Dictionary<string, int>();
+
+        // 遍历 results 列表
+        foreach (Result result in results)
+        {
+            string gestureClass = result.GestureClass;
+
+            if (gestureCounts.ContainsKey(gestureClass))
+            {
+                // 如果字典中已有该手势，则增加计数
+                gestureCounts[gestureClass]++;
+            }
+            else
+            {
+                // 如果字典中没有该手势，则添加新的键值对，计数设为1
+                gestureCounts[gestureClass] = 1;
+            }
+        }
+
+        // 返回统计结果
+        return gestureCounts;
+    }
 
     // Event handler method called when drawing is finished
     private void HandleMatchingRequestedl(List<Vector3> drawingPoints, GameObject LineObject)
@@ -90,7 +116,6 @@ public class DrawingReceiver : MonoBehaviour
             result = gestureResult;
             results.Add(result);
             OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
-
             string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
             canvasFollowView.UpdateResultText(resultOutput);
         }
@@ -133,11 +158,32 @@ public class DrawingReceiver : MonoBehaviour
             RenderGestureToZombie(ProjectedPointsGO, targetedZombieGO);
 
             // Example condition: if gesture matches "D" and score is high enough
-            if (result.GestureClass == "D" && result.Score >= 0.8)
+            /*if (result.GestureClass == "D" && result.Score >= 0.8)
             {
                 targetedZombie.RemoveZombie();
                 Debug.Log("Zombie removed.");
+            }*/
+            /*if (result.GestureClass == "circle" && result.Score >= 0.5)
+            {
+                targetedZombie.PushZombie(1);
+                Debug.Log("Zombie removed.");
+            }*/
+            Dictionary<string, int> gestureCounts = CountGestureOccurrences();
+
+            if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0)
+            {
+                int circleCount = gestureCounts["circle"];
+                targetedZombie.PushZombie(circleCount); // 按 circle 的个数调用 PushZombie
+                Debug.Log($"Zombie pushed {circleCount} times.");
             }
+            if (gestureCounts.ContainsKey("X") && gestureCounts["X"] > 0)
+            {
+                targetedZombie.RemoveZombie(); // 当 x 个数大于 0 时调用 RemoveZombie
+                Debug.Log("Zombie removed due to 'x' gesture.");
+            }
+            gestureCounts.Clear();
+            results.Clear();
+            
         }
         else
         {
@@ -191,7 +237,7 @@ public class DrawingReceiver : MonoBehaviour
             StrokeManager.Instance.SetStrokePoint(projectedline, point3D);
         }
         
-        lineObj.transform.localScale.Set(3f,3f,3f);
+        lineObj.transform.localScale.Set(0.5f,0.5f,0.5f);
         StrokeManager.Instance.ClearGroup("projected lines", 1f);
         
         return lineObj;
