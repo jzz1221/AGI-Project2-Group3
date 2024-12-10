@@ -1280,7 +1280,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: ff530363e8aebaa4bb76813d78c0f4fc, type: 2}
+      objectReference: {fileID: 9100000, guid: 36a3c96380584449cbfc83917e2a519b, type: 2}
     - target: {fileID: -6057140222963153312, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
         type: 3}
       propertyPath: m_ApplyRootMotion
@@ -1758,6 +1758,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5551014577142218206, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551014577142218206, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
+        type: 3}
       propertyPath: m_FadeMode
       value: 1
       objectReference: {fileID: 0}
@@ -1824,7 +1829,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -927199367670048503, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3474543459937302416}
   m_SourcePrefab: {fileID: 100100000, guid: 91e2d70433eac2e418ec0ecb58a4f7d6, type: 3}
 --- !u!4 &1658110351908568836 stripped
 Transform:
@@ -1832,3 +1841,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5942638637529289758}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2403113833296989463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5942638637529289758}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3474543459937302416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2403113833296989463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0b0a2905b964b26897623cfae1d594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walking: 0
+  attacking: 0
+  dead: 0

@@ -6,9 +6,13 @@ using UnityEngine;
 public class ZombieScript : MonoBehaviour
 {
     private float speed;
+    private float attackingDistance;
     private GameObject player;
     private GameObject spawner;
+
+    private ZombieAnimationScript animation;
     private bool active;
+    private bool attacking;
     public bool isRemoved { get; private set; } // Tracks if the zombie is removed
 
     public GameObject plane;
@@ -24,14 +28,19 @@ public class ZombieScript : MonoBehaviour
     {
         active = true;
         isRemoved = false;
+        attacking = false;
         talismancolor = Color.yellow;
         pointedcolor = Color.gray;
         defaultcolor = Color.white;
         defaultcolor.a = 0;
         pointedcolor.a = 0.7f;
         talismancolor.a = 1f;
+        attackingDistance = 2f;
+        animation = gameObject.GetComponentInChildren<ZombieAnimationScript>();
 
         Audio.GetComponent<AudioTrigger>().PlayAudio();
+
+        animation.SetWalkingTrue();
 
         //plane.SetActive(false);
         
@@ -47,13 +56,28 @@ public class ZombieScript : MonoBehaviour
     {
         if (active)
         {
-            AttackPlayer();
+            if(!attacking) {
+                MoveToPlayer();
+            } else {
+                AttackPlayer();
+            }
+        }
+    }
+
+    void MoveToPlayer()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        float distance = Vector3.Distance(player.transform.position, gameObject.transform.position);
+        if(distance < attackingDistance) {
+            animation.SetWalkingFalse();
+            animation.SetAttackingTrue();
+            attacking = true;
         }
     }
 
     void AttackPlayer()
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+        Debug.Log("Attacking");
     }
 
     public void PointPlane()
