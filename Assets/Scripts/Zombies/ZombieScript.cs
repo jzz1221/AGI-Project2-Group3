@@ -78,6 +78,14 @@ public class ZombieScript : MonoBehaviour
     void AttackPlayer()
     {
         Debug.Log("Attacking");
+        if (player != null)
+        {
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(10);
+            }
+        }
     }
 
     public void PointPlane()
