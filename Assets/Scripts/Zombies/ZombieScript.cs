@@ -43,8 +43,20 @@ public class ZombieScript : MonoBehaviour
         animation.SetWalkingTrue();
 
         //plane.SetActive(false);
-        
+
         plane.GetComponent<MeshRenderer>().material.color = defaultcolor;
+
+        // 如果外部未设置player，则尝试在场景中查找
+        if (player == null)
+        {
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (foundPlayer != null)
+            {
+                SetPlayer(foundPlayer);
+            }
+        }
+
+        // 尝试转向玩家
         if (zombieTransform != null && player != null)
         {
             zombieTransform.LookAt(player.transform);
@@ -56,9 +68,12 @@ public class ZombieScript : MonoBehaviour
     {
         if (active)
         {
-            if(!attacking) {
+            if (!attacking)
+            {
                 MoveToPlayer();
-            } else {
+            }
+            else
+            {
                 AttackPlayer();
             }
         }
@@ -66,9 +81,13 @@ public class ZombieScript : MonoBehaviour
 
     void MoveToPlayer()
     {
+        // 确保 player 存在
+        if (player == null) return;
+
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
         float distance = Vector3.Distance(player.transform.position, gameObject.transform.position);
-        if(distance < attackingDistance) {
+        if (distance < attackingDistance)
+        {
             animation.SetWalkingFalse();
             animation.SetAttackingTrue();
             attacking = true;
@@ -115,7 +134,10 @@ public class ZombieScript : MonoBehaviour
 
     public void RemoveZombie()
     {
-        spawner.GetComponent<ZombieSpawnerScript>().UpdateZombiesLeft();
+        if (spawner != null)
+        {
+            spawner.GetComponent<ZombieSpawnerScript>().UpdateZombiesLeft();
+        }
         plane.GetComponent<Renderer>().material.color = talismancolor;
         Destroy(Audio);
         active = false;
@@ -126,18 +148,14 @@ public class ZombieScript : MonoBehaviour
     public void PushZombie(int distance)
     {
         if (player == null) return; // 确保玩家对象存在
-        
+
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
 
         Vector3 pushDirection = -directionToPlayer;
-        Vector3 newPosition = transform.position + pushDirection * (distance*2);
-        
+        Vector3 newPosition = transform.position + pushDirection * (distance * 2);
+
         transform.position = newPosition;
         plane.GetComponent<MeshRenderer>().material.color = talismancolor;
-
-        // 可选：更新僵尸朝向玩家的方向
-        /*zombieTransform.LookAt(player.transform);
-        zombieTransform.Rotate(0, 180, 0);*/
     }
 
     private IEnumerator DestroyZombie()
