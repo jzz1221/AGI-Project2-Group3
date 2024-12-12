@@ -135,9 +135,7 @@ public class ZombieScript : MonoBehaviour
         transform.position = newPosition;
         plane.GetComponent<MeshRenderer>().material.color = talismancolor;
 
-        // 可选：更新僵尸朝向玩家的方向
-        /*zombieTransform.LookAt(player.transform);
-        zombieTransform.Rotate(0, 180, 0);*/
+
     }
 
     private IEnumerator DestroyZombie()

@@ -137,13 +137,13 @@ public class CanvasFollowView : MonoBehaviour
         StrokeManager.Instance.SetStrokePoints(currentLine, drawingPoints);
         
         drawingPointsNumber++;
-        if (drawingPointsNumber> 150 && Detecting == false)
+        if (drawingPointsNumber> 90 && Detecting == false)
         {
             //creat a new Stroke to cut Stroke and trigger symbolMatching
             StartCoroutine(TriggerSymbolMatchingAsync(new List<Vector3>(drawingPoints), currentLine.gameObject));
             Detecting = true;
         }
-        else if (drawingPointsNumber> 90 && Detecting == false)
+        else if (drawingPointsNumber> 50 && Detecting == false)
         {
             StartCoroutine(TriggerSymbolMatchingAsync(new List<Vector3>(drawingPoints), currentLine.gameObject));
             Detecting = true;
@@ -162,7 +162,7 @@ public class CanvasFollowView : MonoBehaviour
     {
         if (!isDrawing) StrokeManager.Instance.ChangeStrokeGroup
             (currentLine.gameObject, "DrawingLine Recognized"); // if that is the last stroke
-        else if (score > minMatchingScore || drawingPoints.Count > 90)
+        else if (score > minMatchingScore || drawingPoints.Count > 50)
         {
             // Change stroke group only when the score condition is met
             if (score > minMatchingScore){ 
@@ -171,7 +171,7 @@ public class CanvasFollowView : MonoBehaviour
                 StrokeManager.Instance.ChangeMaterial(currentLine, SucceedMaterial);
                 drawingPointsNumber = 0;
             }
-            else if(drawingPoints.Count > 90) {
+            else if(drawingPoints.Count > 50) {
                 StrokeManager.Instance.ChangeStrokeGroup
                     (currentLine.gameObject, "DrawingLine Recognized");
                 drawingPointsNumber = 0;
