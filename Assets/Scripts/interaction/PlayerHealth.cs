@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour
 
     void PlayerDied()
     {
-        // 在此处理玩家死亡逻辑
+        GameManager.Instance.EndGame();
         Debug.Log("Player is Dead!");
     }
 }

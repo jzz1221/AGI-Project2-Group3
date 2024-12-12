@@ -180,13 +180,14 @@ public class DrawingReceiver : MonoBehaviour
                 targetedZombie.PushZombie(circleCount); // 按 circle 的个数调用 PushZombie
                 paintingPlaneTransform.Find("PushText").GetComponent<Animator>().SetTrigger("Push");
                 Debug.Log($"Zombie pushed {circleCount} times.");
-                
+                GameManager.Instance.AddScore(5);
             }
             if (gestureCounts.ContainsKey("X") && gestureCounts["X"] > 0)
             {
                 targetedZombie.RemoveZombie(); // 当 x 个数大于 0 时调用 RemoveZombie
                 paintingPlaneTransform.Find("ExpelText").GetComponent<Animator>().SetTrigger("ExpelText");
                 Debug.Log("Zombie removed due to 'x' gesture.");
+                GameManager.Instance.AddScore(10);
             }
             gestureCounts.Clear();
             results.Clear();
