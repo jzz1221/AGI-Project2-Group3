@@ -105,6 +105,7 @@ public class ZombieScript : MonoBehaviour
                 playerHealth.TakeDamage(10);
             }
         }
+        RemoveZombie();
     }
 
     public void PointPlane()

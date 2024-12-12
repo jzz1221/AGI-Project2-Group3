@@ -36,12 +36,12 @@ public class ZombieAnimationScript : MonoBehaviour
         if(!attacking) {
             animator.SetBool("isAttacking", false);
         }
-        if(dead) {
-            animator.SetBool("isDead", true);
-        }
-        if(!dead) {
-            animator.SetBool("isDead", false);
-        }
+        //if(dead) {
+        //    animator.SetBool("isDead", true);
+        //}
+        //if(!dead) {
+        //    animator.SetBool("isDead", false);
+        //}
     }
 
     public void SetWalkingTrue() {
