@@ -39571,7 +39571,7 @@ PrefabInstance:
     - target: {fileID: 2253741618498300383, guid: 3cf72b253ec1d4245b8e921a2becc6d9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4138246780716781021, guid: 3cf72b253ec1d4245b8e921a2becc6d9,
         type: 3}
@@ -46994,6 +46994,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnergyEffect
       objectReference: {fileID: 0}
+    - target: {fileID: 2080332640905615988, guid: 188f79baea20c4f6990566fc9b1769db,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2080332640905615988, guid: 188f79baea20c4f6990566fc9b1769db,
+        type: 3}
+      propertyPath: m_TagString
+      value: effect
+      objectReference: {fileID: 0}
     - target: {fileID: 3318565302108619348, guid: 188f79baea20c4f6990566fc9b1769db,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -47017,7 +47027,7 @@ PrefabInstance:
     - target: {fileID: 3956826237463093816, guid: 188f79baea20c4f6990566fc9b1769db,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.011583021
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 3956826237463093816, guid: 188f79baea20c4f6990566fc9b1769db,
         type: 3}
@@ -47102,6 +47112,11 @@ PrefabInstance:
     - target: {fileID: 6169959803838588338, guid: 188f79baea20c4f6990566fc9b1769db,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834753752034517068, guid: 188f79baea20c4f6990566fc9b1769db,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7923626770999723811, guid: 188f79baea20c4f6990566fc9b1769db,

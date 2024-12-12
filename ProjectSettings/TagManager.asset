@@ -12,6 +12,7 @@ TagManager:
   - Canvas
   - FingerTip
   - zombie
+  - effect
   layers:
   - Default
   - TransparentFX
