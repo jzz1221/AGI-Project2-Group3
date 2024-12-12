@@ -150,7 +150,8 @@ public class DrawingReceiver : MonoBehaviour
         List<Vector2> projectedPoints = ProjectPointsToPlane(allGroupPoints, planeOrigin);
 
         // Handle the projected points (e.g., render, gesture detection, or zombie interaction)
-        ZombieScript targetedZombie = RaycastFromVRCamera.currentTargetZombie;
+        //ZombieScript targetedZombie = RaycastFromVRCamera.currentTargetZombie;
+        ZombieScript targetedZombie = FanDetection.currentTargetZombie;
         Debug.Log("get zombie in receiver");
 
         if (targetedZombie != null && targetedZombie.plane != null)
@@ -177,11 +178,14 @@ public class DrawingReceiver : MonoBehaviour
             {
                 int circleCount = gestureCounts["circle"];
                 targetedZombie.PushZombie(circleCount); // 按 circle 的个数调用 PushZombie
+                paintingPlaneTransform.Find("PushText").GetComponent<Animator>().SetTrigger("Push");
                 Debug.Log($"Zombie pushed {circleCount} times.");
+                
             }
             if (gestureCounts.ContainsKey("X") && gestureCounts["X"] > 0)
             {
                 targetedZombie.RemoveZombie(); // 当 x 个数大于 0 时调用 RemoveZombie
+                paintingPlaneTransform.Find("ExpelText").GetComponent<Animator>().SetTrigger("ExpelText");
                 Debug.Log("Zombie removed due to 'x' gesture.");
             }
             gestureCounts.Clear();

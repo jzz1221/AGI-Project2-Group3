@@ -42,7 +42,7 @@ public class CanvasFollowView : MonoBehaviour
 
     private bool isLine;
 
-    // ÐÂÔöµÄÒýÓÃ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private GameObject beamObject;
     private List<GameObject> effectObjects = new List<GameObject>();
 
@@ -55,13 +55,13 @@ public class CanvasFollowView : MonoBehaviour
         drawingReceiver.OnSymbolMatchingResult += HandleMatchingResult;
         StrokeManager.Instance.Initialize(lineMaterial, lineWidth);
 
-        // ³õÊ¼»¯beamºÍeffect¶ÔÏó
+        // ï¿½ï¿½Ê¼ï¿½ï¿½beamï¿½ï¿½effectï¿½ï¿½ï¿½ï¿½
         beamObject = GameObject.Find("Beam");
         var allEffectObjects = GameObject.FindGameObjectsWithTag("effect");
         foreach (var obj in allEffectObjects)
         {
             effectObjects.Add(obj);
-            obj.SetActive(false); // ³õÊ¼×´Ì¬ÉèÎªfalse
+            obj.SetActive(false); // ï¿½ï¿½Ê¼×´Ì¬ï¿½ï¿½Îªfalse
         }
         if (beamObject != null) beamObject.SetActive(false);
     }
@@ -73,20 +73,20 @@ public class CanvasFollowView : MonoBehaviour
 
     void Update()
     {
-        // Èç¹û»­²¼Î´Ëø¶¨£¬ÊµÊ±¸üÐÂÎ»ÖÃ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊµÊ±ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
         if (!canvasLocked && vrCamera != null)
         {
             transform.position = vrCamera.position + vrCamera.forward * distance + offset;
             transform.rotation = Quaternion.LookRotation(transform.position - vrCamera.position, Vector3.up);
         }
 
-        // µ±ÊÖ¸ú×Ù²¢ÔÚPaintingModeÏÂÊÖÊÆÊ¶±ð³É¹¦Ê±¿ªÊ¼»æ»­
+        // ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Ù²ï¿½ï¿½ï¿½PaintingModeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½É¹ï¿½Ê±ï¿½ï¿½Ê¼ï¿½æ»­
         if (gestureRecognizer.ovrHand.IsTracked)
         {
             if (PaintingMode && gestureRecognizer.IsGestureRecognized())
             {
                 Debug.Log("Gesture recognized!");
-                if (beamObject != null) beamObject.SetActive(true); // ÊÖÊÆÊ¶±ð³É¹¦£¬¼¤»îbeam
+                if (beamObject != null) beamObject.SetActive(true); // ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½beam
                 Draw();
             }
         }
@@ -104,7 +104,7 @@ public class CanvasFollowView : MonoBehaviour
             drawingPoints.Clear();
             currentLine = StrokeManager.Instance.StartStroke(transform, true, "DrawingLine");
 
-            // ¿ªÊ¼»æ»­Ê±£¬½«ËùÓÐeffect¶ÔÏó¼¤»î
+            // ï¿½ï¿½Ê¼ï¿½æ»­Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½effectï¿½ï¿½ï¿½ó¼¤»ï¿½
             foreach (var effectObj in effectObjects)
             {
                 effectObj.SetActive(true);
@@ -127,7 +127,7 @@ public class CanvasFollowView : MonoBehaviour
                 StrokeManager.Instance.ChangeStrokeGroup(currentLine.gameObject, "DrawingLine Recognized");
             }
 
-            // »æ»­½áÊøºó½«beamºÍeffect¶ÔÏóÈ«²¿¹Ø±Õ
+            // ï¿½æ»­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½beamï¿½ï¿½effectï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Ø±ï¿½
             if (beamObject != null) beamObject.SetActive(false);
             foreach (var effectObj in effectObjects)
             {
@@ -154,12 +154,12 @@ public class CanvasFollowView : MonoBehaviour
         StrokeManager.Instance.SetStrokePoints(currentLine, drawingPoints);
         drawingPointsNumber++;
 
-        if (drawingPointsNumber > 150 && Detecting == false)
+        if (drawingPointsNumber > 90 && Detecting == false)
         {
             StartCoroutine(TriggerSymbolMatchingAsync(new List<Vector3>(drawingPoints), currentLine.gameObject));
             Detecting = true;
         }
-        else if (drawingPointsNumber > 90 && Detecting == false)
+        else if (drawingPointsNumber > 50 && Detecting == false)
         {
             StartCoroutine(TriggerSymbolMatchingAsync(new List<Vector3>(drawingPoints), currentLine.gameObject));
             Detecting = true;
@@ -175,13 +175,24 @@ public class CanvasFollowView : MonoBehaviour
 
     private void HandleMatchingResult(string gestureClass, float score)
     {
-        if (!isDrawing)
-            StrokeManager.Instance.ChangeStrokeGroup(currentLine.gameObject, "DrawingLine Recognized");
-        else if (score > minMatchingScore || drawingPoints.Count > 90)
+        if (!isDrawing) StrokeManager.Instance.ChangeStrokeGroup
+            (currentLine.gameObject, "DrawingLine Recognized"); // if that is the last stroke
+        else if (score > minMatchingScore || drawingPoints.Count > 50)
         {
-            StrokeManager.Instance.ChangeStrokeGroup(currentLine.gameObject, "DrawingLine Recognized");
-            if (score > minMatchingScore) StrokeManager.Instance.ChangeMaterial(currentLine, SucceedMaterial);
-            drawingPointsNumber = 0;
+            // Change stroke group only when the score condition is met
+            if (score > minMatchingScore){ 
+                StrokeManager.Instance.ChangeStrokeGroup
+                    (currentLine.gameObject, "DrawingLine Recognized");
+                StrokeManager.Instance.ChangeMaterial(currentLine, SucceedMaterial);
+                drawingPointsNumber = 0;
+            }
+            else if(drawingPoints.Count > 50) {
+                StrokeManager.Instance.ChangeStrokeGroup
+                    (currentLine.gameObject, "DrawingLine Recognized");
+                drawingPointsNumber = 0;
+            }
+            
+            // Reset the current line and related variables
             currentLine = null;
             currentLine = StrokeManager.Instance.StartStroke(transform, true, "DrawingLine");
             drawingPoints.Clear();

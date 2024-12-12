@@ -174,12 +174,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.7228062, y: 14.620194, z: 0.97562784}
-  m_Center: {x: 0.8665345, y: 1.4358811, z: -0.13808277}
+  m_Size: {x: 1.7228062, y: 74.2183, z: 0.97562784}
+  m_Center: {x: 0.8665345, y: 3.4412804, z: -0.13808277}
 --- !u!1 &3159601360864540444
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,7 +432,7 @@ Transform:
   m_GameObject: {fileID: 5305977619649217212}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.85, y: 1.693, z: -0.416}
+  m_LocalPosition: {x: 0.917, y: 1.693, z: -0.652}
   m_LocalScale: {x: -0.01, y: -0.01, z: -0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1530,6 +1530,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
+        type: 3}
+      propertyPath: m_TagString
+      value: zombie
       objectReference: {fileID: 0}
     - target: {fileID: -690603812781328333, guid: 91e2d70433eac2e418ec0ecb58a4f7d6,
         type: 3}
