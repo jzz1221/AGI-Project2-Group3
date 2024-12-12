@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public GameObject endGameUI;      // Contains GameOverText, Leaderboard UI, Restart Button
     public TMP_Text gameOverText;
     public TMP_Text leaderboardText;  // Display top 10 scores + player rank together
+    public GameObject restartButton;
+
+    public ZombieSpawnerScript zombieSpawner;
 
     private const int MaxScores = 10; // Top 10 scores
     private int playerRank = -1;      // Will store player's rank in the leaderboard
@@ -66,10 +69,14 @@ public class GameManager : MonoBehaviour
         score = 0;
         timeRemaining = 60f;
 
+        zombieSpawner.StartSpawning();
         // Show in-game UI, hide end game UI
         if (inGameUI != null) inGameUI.SetActive(true);
-        if (endGameUI != null) endGameUI.SetActive(false);
-
+        if (endGameUI != null)
+        {
+            endGameUI.SetActive(false);
+            restartButton.SetActive(false);
+        }
         UpdateUI();
     }
 
@@ -78,10 +85,12 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
         SaveScore(score); // Save the player's final score to leaderboard
         DisplayEndGameUI();
+        zombieSpawner.ResetSpawner();
     }
 
     public void RestartGame()
     {
+        zombieSpawner.ResetSpawner();
         Debug.Log("Restarting Game...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -108,8 +117,11 @@ public class GameManager : MonoBehaviour
     void DisplayEndGameUI()
     {
         if (inGameUI != null) inGameUI.SetActive(false);
-        if (endGameUI != null) endGameUI.SetActive(true);
-
+        if (endGameUI != null)
+        {
+            endGameUI.SetActive(true);
+            restartButton.SetActive(true);
+        }
         if (gameOverText != null)
             gameOverText.text = "Game Over! Your Final Score: " + score;
 
