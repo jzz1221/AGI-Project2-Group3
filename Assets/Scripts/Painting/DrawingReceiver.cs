@@ -178,11 +178,13 @@ public class DrawingReceiver : MonoBehaviour
                 int circleCount = gestureCounts["circle"];
                 targetedZombie.PushZombie(circleCount); // 按 circle 的个数调用 PushZombie
                 Debug.Log($"Zombie pushed {circleCount} times.");
+                GameManager.Instance.AddScore(5);
             }
             if (gestureCounts.ContainsKey("X") && gestureCounts["X"] > 0)
             {
                 targetedZombie.RemoveZombie(); // 当 x 个数大于 0 时调用 RemoveZombie
                 Debug.Log("Zombie removed due to 'x' gesture.");
+                GameManager.Instance.AddScore(10);
             }
             gestureCounts.Clear();
             results.Clear();
