@@ -6,7 +6,6 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    // 在 Inspector 中将玩家UI血条Slider拖拽到此处
     public Slider healthSlider;
 
     void Start()
