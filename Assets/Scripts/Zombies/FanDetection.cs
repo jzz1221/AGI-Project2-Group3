@@ -11,7 +11,7 @@ public class FanDetection : MonoBehaviour
 
     private GameObject lastTarget = null; // 上一个高亮的目标
     private Color defaultColor = Color.gray; // 默认颜色
-    private Color highlightColor = Color.yellow; // 高亮颜色
+    private Color highlightColor = Color.red; // 高亮颜色
 
     void Start()
     {
