@@ -17544,7 +17544,7 @@ MonoBehaviour:
   drawingReceiver: {fileID: 661846249}
   paintingPlaneTransform: {fileID: 1068697476}
   reslutPlaneTransform: {fileID: 756379673}
-  minMatchingScore: 0.68
+  minMatchingScore: 0.7
   PointTextforDebug: {fileID: 350930012}
   ResultText: {fileID: 1862758714}
   IsDrawing: {fileID: 1938075958}
@@ -67853,7 +67853,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 8243f6f491a9d2d418d687efc4c90b19, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -145073,8 +145073,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zombieAmount: 100
   radius: 8
-  delay: 7
-  zombieSpeed: 0.1
+  delay: 9
+  zombieSpeed: 0.2
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}
   player: {fileID: 798877380}
 --- !u!4 &2133247194
