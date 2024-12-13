@@ -117,7 +117,10 @@ public class DrawingReceiver : MonoBehaviour
             Gesture candidate = new Gesture(points.ToArray());
             Result gestureResult = PointCloudRecognizer.Classify(candidate, trainingSet.ToArray());
             result = gestureResult;
-            if (result.Score>minMatchingScore) results.Add(result);
+            if (result.Score > minMatchingScore)
+            {
+                results.Add(result);
+            }
             OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
             string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
             canvasFollowView.UpdateResultText(resultOutput);
@@ -154,25 +157,23 @@ public class DrawingReceiver : MonoBehaviour
         ZombieScript targetedZombie = FanDetection.currentTargetZombie;
         Debug.Log("get zombie in receiver");
 
+        /*if (!GameManager.Instance.OnboardingEnd)
+        {
+            Dictionary<string, int> gestureCounts = CountGestureOccurrences();
+            if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0) 
+                GameManager.Instance.DetectStartGesture();
+            gestureCounts.Clear();
+            results.Clear();
+        }*/
+
         if (targetedZombie != null && targetedZombie.plane != null)
         {
             targetedZombie.ActivatePlane();
             GameObject targetedZombieGO = targetedZombie.plane.gameObject;
             GameObject ProjectedPointsGO = Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
             RenderGestureToZombie(ProjectedPointsGO, targetedZombieGO);
-
-            // Example condition: if gesture matches "D" and score is high enough
-            /*if (result.GestureClass == "D" && result.Score >= 0.8)
-            {
-                targetedZombie.RemoveZombie();
-                Debug.Log("Zombie removed.");
-            }*/
-            /*if (result.GestureClass == "circle" && result.Score >= 0.5)
-            {
-                targetedZombie.PushZombie(1);
-                Debug.Log("Zombie removed.");
-            }*/
             Dictionary<string, int> gestureCounts = CountGestureOccurrences();
+            Debug.Log("GestureCounts" + gestureCounts);
 
             if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0)
             {
@@ -224,7 +225,7 @@ public class DrawingReceiver : MonoBehaviour
         // generate the Relative coordinates of a relative plane 相对于平面中点转换为2D坐标，保留 x 和 y
         Vector2 projectedPoint = new Vector2(planePoint.x - planeOrigin.x, planePoint.y - planeOrigin.y);
         
-        Debug.Log($"Projected 2D Point: {projectedPoint}");
+        //Debug.Log($"Projected 2D Point: {projectedPoint}");
         
         return projectedPoint;
     }

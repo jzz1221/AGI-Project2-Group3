@@ -5,6 +5,7 @@ using UnityEngine.XR.Hands;
 using System;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Networking;
 
 public class CanvasFollowView : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class CanvasFollowView : MonoBehaviour
 
     public event Action<List<Vector3>, GameObject> OnDrawingFinished;
     public event Action<List<Vector3>, GameObject> OnSymbolMatchingRequested;
+
 
     void Start()
     {
@@ -185,7 +187,6 @@ public class CanvasFollowView : MonoBehaviour
                     (currentLine.gameObject, "DrawingLine Recognized");
                 drawingPointsNumber = 0;
             }
-            
             // Reset the current line and related variables
             currentLine = null;
             currentLine = StrokeManager.Instance.StartStroke(transform, true, "DrawingLine");
