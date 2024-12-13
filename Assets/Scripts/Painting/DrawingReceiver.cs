@@ -160,7 +160,8 @@ public class DrawingReceiver : MonoBehaviour
         if (!GameManager.Instance.OnboardingEnd)
         {
             Dictionary<string, int> gestureCounts = CountGestureOccurrences();
-            if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0) 
+            if ((gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0) 
+                || gestureCounts.ContainsKey("X") && gestureCounts["X"] > 0) 
                 GameManager.Instance.DetectStartGesture();
             gestureCounts.Clear();
             results.Clear();
@@ -168,6 +169,7 @@ public class DrawingReceiver : MonoBehaviour
 
         if (targetedZombie != null && targetedZombie.plane != null)
         {
+            Debug.Log("zombie detected"+targetedZombie.plane.name);
             targetedZombie.ActivatePlane();
             GameObject targetedZombieGO = targetedZombie.plane.gameObject;
             GameObject ProjectedPointsGO = Render2DPointsOnPlane(projectedPoints, ResultPlaneTransform);
@@ -178,6 +180,7 @@ public class DrawingReceiver : MonoBehaviour
             if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0)
             {
                 int circleCount = gestureCounts["circle"];
+                Debug.Log("circle count" + circleCount);
                 targetedZombie.PushZombie(circleCount); // 按 circle 的个数调用 PushZombie
                 paintingPlaneTransform.Find("PushText").GetComponent<Animator>().SetTrigger("Push");
                 Debug.Log($"Zombie pushed {circleCount} times.");

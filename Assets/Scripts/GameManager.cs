@@ -80,7 +80,6 @@ public class GameManager : MonoBehaviour
                 if (StartGameGesture != null) StartGameGesture.SetActive(true);
             }
         }
-        if(OnboardingEnd) StartGame();
         if (isGameActive)
         {
             // Countdown timer
@@ -99,12 +98,12 @@ public class GameManager : MonoBehaviour
     {
         OnboardingEnd = true;
         StartGameGesture.SetActive(false);
+        StartGame();
     }
 
     public void StartGame()
     {
         isGameActive = true;
-        OnboardingEnd = false;
         score = 0;
         timeRemaining = 60f;
         ZombieSpawn.SetActive(true);

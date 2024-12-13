@@ -17130,7 +17130,7 @@ MonoBehaviour:
   drawingReceiver: {fileID: 661846249}
   paintingPlaneTransform: {fileID: 1068697476}
   reslutPlaneTransform: {fileID: 756379673}
-  minMatchingScore: 0.5
+  minMatchingScore: 0.68
   PointTextforDebug: {fileID: 350930012}
   ResultText: {fileID: 1862758714}
   IsDrawing: {fileID: 1938075958}
@@ -23525,7 +23525,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Draw a circle to start the game.
+  m_text: Draw a circle or "X" to start the game.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
