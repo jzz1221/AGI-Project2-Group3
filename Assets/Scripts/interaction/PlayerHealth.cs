@@ -10,6 +10,13 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
+        // 在初始时根据场景加载自动设定一次
+        ResetHealth();
+    }
+
+    // 新增的重置方法
+    public void ResetHealth()
+    {
         currentHealth = maxHealth;
         if (healthSlider != null)
         {

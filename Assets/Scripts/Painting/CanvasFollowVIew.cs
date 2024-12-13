@@ -42,7 +42,6 @@ public class CanvasFollowView : MonoBehaviour
 
     private bool isLine;
 
-    // ����������
     private GameObject beamObject;
     private List<GameObject> effectObjects = new List<GameObject>();
 
@@ -55,13 +54,12 @@ public class CanvasFollowView : MonoBehaviour
         drawingReceiver.OnSymbolMatchingResult += HandleMatchingResult;
         StrokeManager.Instance.Initialize(lineMaterial, lineWidth);
 
-        // ��ʼ��beam��effect����
         beamObject = GameObject.Find("Beam");
         var allEffectObjects = GameObject.FindGameObjectsWithTag("effect");
         foreach (var obj in allEffectObjects)
         {
             effectObjects.Add(obj);
-            obj.SetActive(false); // ��ʼ״̬��Ϊfalse
+            obj.SetActive(false);
         }
         if (beamObject != null) beamObject.SetActive(false);
     }
@@ -73,20 +71,18 @@ public class CanvasFollowView : MonoBehaviour
 
     void Update()
     {
-        // �������δ������ʵʱ����λ��
         if (!canvasLocked && vrCamera != null)
         {
             transform.position = vrCamera.position + vrCamera.forward * distance + offset;
             transform.rotation = Quaternion.LookRotation(transform.position - vrCamera.position, Vector3.up);
         }
 
-        // ���ָ��ٲ���PaintingMode������ʶ��ɹ�ʱ��ʼ�滭
         if (gestureRecognizer.ovrHand.IsTracked)
         {
             if (PaintingMode && gestureRecognizer.IsGestureRecognized())
             {
                 Debug.Log("Gesture recognized!");
-                if (beamObject != null) beamObject.SetActive(true); // ����ʶ��ɹ�������beam
+                if (beamObject != null) beamObject.SetActive(true);
                 Draw();
             }
         }
@@ -104,7 +100,6 @@ public class CanvasFollowView : MonoBehaviour
             drawingPoints.Clear();
             currentLine = StrokeManager.Instance.StartStroke(transform, true, "DrawingLine");
 
-            // ��ʼ�滭ʱ��������effect���󼤻�
             foreach (var effectObj in effectObjects)
             {
                 effectObj.SetActive(true);
@@ -127,7 +122,6 @@ public class CanvasFollowView : MonoBehaviour
                 StrokeManager.Instance.ChangeStrokeGroup(currentLine.gameObject, "DrawingLine Recognized");
             }
 
-            // �滭������beam��effect����ȫ���ر�
             if (beamObject != null) beamObject.SetActive(false);
             foreach (var effectObj in effectObjects)
             {

@@ -19,6 +19,7 @@ public class ZombieSpawnerScript : MonoBehaviour
 
     void Start()
     {
+        // Do not start spawning automatically
     }
 
     void Update()
@@ -35,12 +36,24 @@ public class ZombieSpawnerScript : MonoBehaviour
         StartCoroutine(SpawnZombies());
     }
 
+    public void StopSpawning()
+    {
+        // Stop all spawning coroutines
+        StopAllCoroutines();
+    }
+
     private IEnumerator SpawnZombies()
     {
         int amountLeft = zombieAmount;
 
         while (amountLeft > 0)
         {
+            // If the game is no longer active, break out of the loop
+            if (!GameManager.Instance.isGameActive)
+            {
+                yield break;
+            }
+
             GameObject z = Instantiate(zombie, transform.position + GenereatePosition() * radius, Quaternion.identity);
             z.GetComponent<ZombieScript>().SetPlayer(player);
             z.GetComponent<ZombieScript>().SetSpawner(gameObject);

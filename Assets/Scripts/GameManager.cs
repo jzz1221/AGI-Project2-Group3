@@ -69,6 +69,12 @@ public class GameManager : MonoBehaviour
         score = 0;
         timeRemaining = 60f;
 
+        PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.ResetHealth();
+        }
+
         zombieSpawner.StartSpawning();
         // Show in-game UI, hide end game UI
         if (inGameUI != null) inGameUI.SetActive(true);
@@ -85,15 +91,10 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
         SaveScore(score); // Save the player's final score to leaderboard
         DisplayEndGameUI();
-        zombieSpawner.ResetSpawner();
+        zombieSpawner.StopSpawning();   // Stop spawning coroutine
+        zombieSpawner.ResetSpawner();   // Clear previously spawned zombies
     }
 
-    public void RestartGame()
-    {
-        zombieSpawner.ResetSpawner();
-        Debug.Log("Restarting Game...");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 
     public void AddScore(int amount)
     {

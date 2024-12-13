@@ -16805,7 +16805,7 @@ MonoBehaviour:
   vrCamera: {fileID: 1267533665}
   gestureRecognizer: {fileID: 661846247}
   distance: 0.42
-  offset: {x: 0, y: 0, z: 0}
+  offset: {x: 0.15, y: -0.28, z: 0}
   lineMaterial: {fileID: 2100000, guid: e150928833b6b6e46af05bd8cd2747bf, type: 2}
   SucceedMaterial: {fileID: 2100000, guid: d9d0b12c0ca382c46b29ec8aa55c8437, type: 2}
   lineWidth: 0.01
@@ -16837,7 +16837,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0.02}
+  m_Size: {x: 1, y: 1, z: 0.01}
   m_Center: {x: 0, y: 0, z: -0.01}
 --- !u!23 &188956418
 MeshRenderer:
@@ -16859,7 +16859,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: 4ff4bf42ffc12e34a9c53b2f216f5442, type: 3}
+  - {fileID: 2100000, guid: 8243f6f491a9d2d418d687efc4c90b19, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22579,7 +22579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -123, y: 55}
+  m_AnchoredPosition: {x: -155.53, y: 75}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &292934904
@@ -39651,7 +39651,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 107.2, y: 55}
+  m_AnchoredPosition: {x: 155.2, y: 75}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &637869067
@@ -71666,7 +71666,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 55.7}
+  m_AnchoredPosition: {x: 0, y: 56}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1291742422
@@ -83636,8 +83636,8 @@ RectTransform:
   m_GameObject: {fileID: 1494926297}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.21, y: 1.21, z: 1.21}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 637869066}
   - {fileID: 292934903}
@@ -93653,8 +93653,8 @@ RectTransform:
   m_GameObject: {fileID: 1541101122}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1291742421}
   - {fileID: 998868003}
@@ -138750,7 +138750,7 @@ MonoBehaviour:
   zombieAmount: 100
   radius: 8
   delay: 7
-  zombieSpeed: 0.1
+  zombieSpeed: 0.2
   zombie: {fileID: 931901399962843625, guid: 3584d3332c55442c3ba27b880f4b65b4, type: 3}
   player: {fileID: 798877380}
 --- !u!4 &2133247194
