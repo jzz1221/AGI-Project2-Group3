@@ -157,14 +157,14 @@ public class DrawingReceiver : MonoBehaviour
         ZombieScript targetedZombie = FanDetection.currentTargetZombie;
         Debug.Log("get zombie in receiver");
 
-        /*if (!GameManager.Instance.OnboardingEnd)
+        if (!GameManager.Instance.OnboardingEnd)
         {
             Dictionary<string, int> gestureCounts = CountGestureOccurrences();
             if (gestureCounts.ContainsKey("circle") && gestureCounts["circle"] > 0) 
                 GameManager.Instance.DetectStartGesture();
             gestureCounts.Clear();
             results.Clear();
-        }*/
+        }
 
         if (targetedZombie != null && targetedZombie.plane != null)
         {
