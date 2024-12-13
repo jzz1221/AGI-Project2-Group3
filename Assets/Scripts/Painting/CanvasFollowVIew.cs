@@ -193,7 +193,7 @@ public class CanvasFollowView : MonoBehaviour
             drawingPoints.Clear();
         }
         Detecting = false;
-        Debug.Log($"Gesture: {gestureClass}, Score: {score}");
+        //Debug.Log($"Gesture: {gestureClass}, Score: {score}");
     }
 
     public void UpdateResultText(string result)

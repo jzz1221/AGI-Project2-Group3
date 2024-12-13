@@ -120,6 +120,7 @@ public class DrawingReceiver : MonoBehaviour
             if (result.Score > minMatchingScore)
             {
                 results.Add(result);
+                Debug.Log($"Gesture: {result.GestureClass}, Score: {result.Score}");
             }
             OnSymbolMatchingResult?.Invoke(gestureResult.GestureClass, gestureResult.Score);
             string resultOutput = gestureResult.GestureClass + " " + gestureResult.Score;
