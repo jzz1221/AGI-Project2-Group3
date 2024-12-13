@@ -65,6 +65,11 @@ public class GameManager : MonoBehaviour
     {
         ZombieSpawn.SetActive(false);
         StartGameGesture.SetActive(false);
+        if (endGameUI != null)
+        {
+            endGameUI.SetActive(false);
+            restartButton.SetActive(false);
+        }
         //StartGame();
     }
 
