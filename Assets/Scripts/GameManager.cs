@@ -1,13 +1,30 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro; // For TextMeshPro
+using TMPro;
+using Unity.VisualScripting; // For TextMeshPro
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool isGameActive = false;
-
+    
+    //Start Game Process
+    public bool OnboardingEnd = false;
+    public bool CheckHands = false;
+    
+    public GameObject HandModel;
+    public GameObject HandNotionAni;
+    public GameObject HandNotionText;
+    
+    public GameObject StartGameGesture;
+    
+    //zombiespawn
+    public GameObject ZombieSpawn;
+    
+    
     // Gameplay fields
     public int score = 0;
     public float timeRemaining = 60f;
@@ -24,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     private const int MaxScores = 10; // Top 10 scores
     private int playerRank = -1;      // Will store player's rank in the leaderboard
+    
+    
 
     void Awake()
     {
@@ -41,11 +60,24 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartGame();
+        ZombieSpawn.SetActive(false);
+        StartGameGesture.SetActive(false);
+        //StartGame();
     }
 
     void Update()
     {
+        if (!CheckHands)
+        {
+            if (HandModel.transform.Find("Bones") != null)
+            {
+                CheckHands = true;
+                if(HandNotionAni!= null) HandNotionAni.SetActive(false);
+                if(HandNotionText!= null) HandNotionText.SetActive(false);
+                if (StartGameGesture != null) StartGameGesture.SetActive(true);
+            }
+        }
+        if(OnboardingEnd) StartGame();
         if (isGameActive)
         {
             // Countdown timer
@@ -60,11 +92,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void DetectStartGesture()
+    {
+        OnboardingEnd = true;
+        StartGameGesture.SetActive(false);
+    }
+
     public void StartGame()
     {
         isGameActive = true;
+        OnboardingEnd = false;
         score = 0;
         timeRemaining = 60f;
+        ZombieSpawn.SetActive(true);
 
         // Show in-game UI, hide end game UI
         if (inGameUI != null) inGameUI.SetActive(true);
